@@ -1,4 +1,5 @@
 export { Hero } from './Hero';
+export { Stats } from './Stats';
 export { Features } from './Features';
 export { FeatureCard } from './FeatureCard';
 export { HowItWorks } from './HowItWorks';

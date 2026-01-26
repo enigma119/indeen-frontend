@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
@@ -10,9 +9,11 @@ import { MobileNav } from './MobileNav';
 import { UserMenu } from './UserMenu';
 
 const navItems = [
-  { label: 'Trouver un mentor', href: '/mentors' },
-  { label: 'Devenir mentor', href: '/devenir-mentor' },
-  { label: 'Comment ça marche', href: '/comment-ca-marche' },
+  { label: 'Accueil', href: '/' },
+  { label: 'Cours', href: '/mentors' },
+  { label: 'Tarifs', href: '/tarifs' },
+  { label: 'À propos', href: '/a-propos' },
+  { label: 'Blog', href: '/blog' },
 ];
 
 interface HeaderProps {
@@ -25,81 +26,63 @@ interface HeaderProps {
 
 export function Header({ user }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, []);
-
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-    setIsDark(!isDark);
-  };
-
   const isAuthenticated = !!user;
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full bg-white dark:bg-gray-900 border-b transition-shadow duration-200',
-        isScrolled && 'shadow-md'
+        'sticky top-0 z-50 w-full transition-all duration-300',
+        isScrolled
+          ? 'bg-white shadow-md py-3'
+          : 'bg-transparent py-5'
       )}
     >
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Logo />
+          <Logo variant="dark" />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* Desktop Navigation - Center */}
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary-600 transition-colors"
+                className="text-sm font-medium text-navy-700 hover:text-teal-600 transition-colors"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          {/* Right side */}
-          <div className="flex items-center gap-4">
-            {/* Dark mode toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleDarkMode}
-              className="hidden sm:flex"
-            >
-              {isDark ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-              <span className="sr-only">Toggle dark mode</span>
-            </Button>
-
-            {/* Auth buttons / User menu */}
+          {/* Right side - Auth buttons */}
+          <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <UserMenu user={user} />
             ) : (
               <div className="hidden md:flex items-center gap-3">
-                <Button variant="outline" asChild>
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="text-navy-700 hover:text-navy-900 hover:bg-navy-100/50 rounded-full px-6"
+                >
                   <Link href="/connexion">Connexion</Link>
                 </Button>
-                <Button asChild className="bg-primary-500 hover:bg-primary-600">
-                  <Link href="/inscription">Inscription</Link>
+                <Button
+                  asChild
+                  className="bg-navy-800 hover:bg-navy-900 text-white rounded-full px-6"
+                >
+                  <Link href="/inscription">S&apos;inscrire</Link>
                 </Button>
               </div>
             )}

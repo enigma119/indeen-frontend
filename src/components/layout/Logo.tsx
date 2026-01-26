@@ -1,14 +1,34 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { BookOpen } from 'lucide-react';
 
-export function Logo({ className }: { className?: string }) {
+interface LogoProps {
+  className?: string;
+  variant?: 'dark' | 'light';
+}
+
+export function Logo({ className, variant = 'dark' }: LogoProps) {
+  const isDark = variant === 'dark';
+
   return (
-    <Link href="/" className={cn("flex items-center gap-2", className)}>
-      <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-        <span className="text-white font-bold">MI</span>
+    <Link href="/" className={cn('flex items-center gap-2', className)}>
+      <div
+        className={cn(
+          'w-9 h-9 rounded-lg flex items-center justify-center',
+          isDark ? 'bg-teal-500' : 'bg-white/20'
+        )}
+      >
+        <BookOpen
+          className={cn('w-5 h-5', isDark ? 'text-white' : 'text-white')}
+        />
       </div>
-      <span className="font-bold text-lg hidden sm:block">
-        Mentorat Islamique
+      <span
+        className={cn(
+          'font-bold text-xl tracking-tight',
+          isDark ? 'text-navy-800' : 'text-white'
+        )}
+      >
+        Indeen
       </span>
     </Link>
   );
