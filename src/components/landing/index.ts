@@ -6,4 +6,6 @@ export { HowItWorks } from './HowItWorks';
 export { StepCard } from './StepCard';
 export { Testimonials } from './Testimonials';
 export { TestimonialCard } from './TestimonialCard';
+export { Pricing } from './Pricing';
+export { FAQ } from './FAQ';
 export { FinalCTA } from './FinalCTA';
