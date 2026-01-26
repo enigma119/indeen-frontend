@@ -1,7 +1,12 @@
-export default function MarketingPage() {
+import { Hero } from '@/components/landing/Hero';
+import { Features } from '@/components/landing/Features';
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      <h1>Indeen - Plateforme de Mentorat Islamique</h1>
-    </main>
+    <>
+      <Hero />
+      <Features />
+      {/* Autres sections à venir */}
+    </>
   );
 }
