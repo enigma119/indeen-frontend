@@ -1,3 +1,8 @@
 export { Hero } from './Hero';
 export { Features } from './Features';
 export { FeatureCard } from './FeatureCard';
+export { HowItWorks } from './HowItWorks';
+export { StepCard } from './StepCard';
+export { Testimonials } from './Testimonials';
+export { TestimonialCard } from './TestimonialCard';
+export { FinalCTA } from './FinalCTA';
