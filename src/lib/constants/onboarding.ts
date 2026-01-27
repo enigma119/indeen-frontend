@@ -7,6 +7,7 @@ import type {
   Specialty,
   Language,
   LearnerCategory,
+  Gender,
 } from '@/types/onboarding';
 
 // Mentee Onboarding Steps
@@ -289,4 +290,37 @@ export const DAYS_OF_WEEK = [
   { value: 'FRIDAY', label: 'Vendredi', shortLabel: 'Ven' },
   { value: 'SATURDAY', label: 'Samedi', shortLabel: 'Sam' },
   { value: 'SUNDAY', label: 'Dimanche', shortLabel: 'Dim' },
+];
+
+// Genders
+export const GENDERS: { value: Gender; label: string }[] = [
+  { value: 'MALE', label: 'Homme' },
+  { value: 'FEMALE', label: 'Femme' },
+  { value: 'PREFER_NOT_TO_SAY', label: 'Je préfère ne pas dire' },
+];
+
+// Countries (common ones first, then alphabetically)
+export const COUNTRIES = [
+  { value: 'FR', label: 'France' },
+  { value: 'BE', label: 'Belgique' },
+  { value: 'CH', label: 'Suisse' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'MA', label: 'Maroc' },
+  { value: 'DZ', label: 'Algérie' },
+  { value: 'TN', label: 'Tunisie' },
+  { value: 'SN', label: 'Sénégal' },
+  { value: 'CI', label: 'Côte d\'Ivoire' },
+  { value: 'ML', label: 'Mali' },
+  { value: 'GB', label: 'Royaume-Uni' },
+  { value: 'DE', label: 'Allemagne' },
+  { value: 'US', label: 'États-Unis' },
+  { value: 'AE', label: 'Émirats arabes unis' },
+  { value: 'SA', label: 'Arabie saoudite' },
+  { value: 'EG', label: 'Égypte' },
+  { value: 'TR', label: 'Turquie' },
+  { value: 'PK', label: 'Pakistan' },
+  { value: 'BD', label: 'Bangladesh' },
+  { value: 'ID', label: 'Indonésie' },
+  { value: 'MY', label: 'Malaisie' },
+  { value: 'OTHER', label: 'Autre' },
 ];

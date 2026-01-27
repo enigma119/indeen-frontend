@@ -24,6 +24,7 @@ export const menteeStep1Schema = z.object({
       (val) => !val || /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/.test(val),
       'Numéro de téléphone invalide'
     ),
+  gender: z.enum(['MALE', 'FEMALE', 'PREFER_NOT_TO_SAY']).optional(),
   avatar: z.any().optional(),
 });
 

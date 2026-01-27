@@ -38,6 +38,9 @@ export type LearningGoal =
 // Learning Pace
 export type LearningPace = 'SLOW' | 'MODERATE' | 'INTENSIVE';
 
+// Gender
+export type Gender = 'MALE' | 'FEMALE' | 'PREFER_NOT_TO_SAY';
+
 // Specialty
 export type Specialty =
   | 'TAJWEED'
@@ -69,6 +72,7 @@ export interface MenteeOnboardingData {
   lastName: string;
   country: string;
   phone?: string;
+  gender?: Gender;
   avatar?: File | string;
 
   // Step 2: Learner Profile
