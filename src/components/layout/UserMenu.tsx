@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuth } from '@/hooks/use-auth';
+import { LogoutDialog } from '@/components/auth/LogoutDialog';
 
 interface UserMenuProps {
   user: {
@@ -21,18 +21,12 @@ interface UserMenuProps {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
-  const { signOut } = useAuth();
-
   const initials = user.name
     .split(' ')
     .map((n) => n[0])
     .join('')
     .toUpperCase()
     .slice(0, 2) || 'U';
-
-  const handleSignOut = async () => {
-    await signOut();
-  };
 
   return (
     <DropdownMenu>
@@ -71,13 +65,17 @@ export function UserMenu({ user }: UserMenuProps) {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={handleSignOut}
-          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          Déconnexion
-        </DropdownMenuItem>
+        <LogoutDialog
+          trigger={
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Déconnexion
+            </DropdownMenuItem>
+          }
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

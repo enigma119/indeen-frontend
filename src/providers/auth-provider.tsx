@@ -3,23 +3,10 @@
 import { ReactNode } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { useAuthStore } from '@/stores/auth-store';
+import { AuthLoader } from '@/components/auth/AuthLoader';
 
 interface AuthProviderProps {
   children: ReactNode;
-}
-
-/**
- * Loading spinner component displayed during auth initialization
- */
-function LoadingSpinner() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="flex flex-col items-center gap-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <p className="text-sm text-muted-foreground">Chargement...</p>
-      </div>
-    </div>
-  );
 }
 
 /**
@@ -34,7 +21,7 @@ function AuthProviderInner({ children }: AuthProviderProps) {
 
   // Show loading spinner only during initial auth check
   if (!isInitialized) {
-    return <LoadingSpinner />;
+    return <AuthLoader message="Chargement de votre session..." />;
   }
 
   return <>{children}</>;

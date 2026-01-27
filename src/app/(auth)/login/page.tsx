@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,11 +15,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
+import { getAuthErrorMessage } from '@/lib/auth-errors';
+import { apiClient } from '@/lib/api/client';
+import type { User } from '@/types';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
+  const redirectTo = searchParams.get('redirectTo');
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,6 +44,28 @@ export default function LoginPage() {
 
   const remember = watch('remember');
 
+  /**
+   * Get redirect URL based on user role
+   */
+  const getRedirectUrl = (user: User): string => {
+    // If there's a specific redirect URL, use it
+    if (redirectTo) {
+      return redirectTo;
+    }
+
+    // Otherwise, redirect based on role
+    switch (user.role) {
+      case 'MENTOR':
+        return '/dashboard';
+      case 'MENTEE':
+        return '/mentors';
+      case 'ADMIN':
+        return '/admin';
+      default:
+        return '/dashboard';
+    }
+  };
+
   const onSubmit = async (data: LoginFormData) => {
     setError(null);
     setIsLoading(true);
@@ -51,28 +77,39 @@ export default function LoginPage() {
         return;
       }
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
       if (signInError) {
-        if (signInError.message.includes('Invalid login credentials')) {
-          setError('Email ou mot de passe incorrect');
-        } else if (signInError.message.includes('Email not confirmed')) {
-          setError('Veuillez confirmer votre email avant de vous connecter');
-        } else {
-          setError(signInError.message);
-        }
+        setError(getAuthErrorMessage(signInError));
         return;
       }
 
-      // Redirect to dashboard or specified redirect URL
-      router.push(redirectTo);
+      // Fetch user profile to get role for redirect
+      let userProfile: User | null = null;
+      if (authData.user) {
+        try {
+          userProfile = await apiClient.get<User>(`/users/${authData.user.id}`);
+        } catch {
+          // Continue even if profile fetch fails
+          console.error('[Login] Error fetching user profile');
+        }
+      }
+
+      // Show success toast
+      toast.success('Bienvenue !', {
+        description: 'Vous êtes maintenant connecté.',
+      });
+
+      // Redirect based on role or specified URL
+      const redirectUrl = userProfile ? getRedirectUrl(userProfile) : (redirectTo || '/dashboard');
+      router.push(redirectUrl);
       router.refresh();
     } catch (err) {
       console.error('[Login] Error:', err);
-      setError('Une erreur est survenue. Veuillez réessayer.');
+      setError(getAuthErrorMessage(err));
     } finally {
       setIsLoading(false);
     }

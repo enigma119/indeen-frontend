@@ -1,10 +1,15 @@
 'use client';
 
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, useRef } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
 import { createBrowserClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { apiClient } from '@/lib/api/client';
 import type { User } from '@/types';
+
+// Session refresh interval (4 minutes)
+const SESSION_REFRESH_INTERVAL = 4 * 60 * 1000;
+// Time before expiry to trigger refresh (5 minutes)
+const REFRESH_THRESHOLD = 5 * 60;
 
 /**
  * Hook for managing authentication state
@@ -27,6 +32,7 @@ export function useAuth() {
 
   const supabase = useMemo(() => createBrowserClient(), []);
   const isConfigured = isSupabaseConfigured();
+  const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   /**
    * Fetch user profile from backend
@@ -42,6 +48,47 @@ export function useAuth() {
       return null;
     }
   }, []);
+
+  /**
+   * Check and refresh session if needed
+   */
+  const checkAndRefreshSession = useCallback(async () => {
+    if (!supabase) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        // No session, user is logged out
+        return;
+      }
+
+      // Check if token is about to expire
+      const expiresAt = session.expires_at;
+      if (expiresAt) {
+        const now = Math.floor(Date.now() / 1000);
+        const timeUntilExpiry = expiresAt - now;
+
+        if (timeUntilExpiry < REFRESH_THRESHOLD) {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[useAuth] Token expiring soon, refreshing...');
+          }
+
+          const { error } = await supabase.auth.refreshSession();
+
+          if (error) {
+            console.error('[useAuth] Error refreshing session:', error);
+            // If refresh fails, log out the user
+            storeLogout();
+          }
+        }
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[useAuth] Error checking session:', error);
+      }
+    }
+  }, [supabase, storeLogout]);
 
   /**
    * Initialize authentication state
@@ -140,6 +187,23 @@ export function useAuth() {
       initializeAuth();
     }
   }, [isInitialized, initializeAuth]);
+
+  // Set up periodic session refresh
+  useEffect(() => {
+    if (!supabase || !isInitialized) return;
+
+    // Initial check
+    checkAndRefreshSession();
+
+    // Set up interval
+    refreshIntervalRef.current = setInterval(checkAndRefreshSession, SESSION_REFRESH_INTERVAL);
+
+    return () => {
+      if (refreshIntervalRef.current) {
+        clearInterval(refreshIntervalRef.current);
+      }
+    };
+  }, [supabase, isInitialized, checkAndRefreshSession]);
 
   // Listen for auth state changes
   useEffect(() => {
