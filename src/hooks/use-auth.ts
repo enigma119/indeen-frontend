@@ -39,9 +39,20 @@ export function useAuth() {
    */
   const fetchUserProfile = useCallback(async (userId: string): Promise<User | null> => {
     try {
-      const profile = await apiClient.get<User>(`/users/${userId}`);
+      // Use /auth/me for authenticated users (uses token, more reliable)
+      const profile = await apiClient.get<User>('/auth/me');
       return profile;
-    } catch (error) {
+    } catch (error: any) {
+      // If user doesn't exist in database, the trigger should have created them
+      // If 404, it means the user wasn't created yet (trigger might not have run)
+      // In that case, we just return null - the user can refresh or the trigger will create them
+      if (error?.response?.status === 404) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[useAuth] User not found in database. The trigger should create them automatically.');
+        }
+        return null;
+      }
+      
       if (process.env.NODE_ENV === 'development') {
         console.error('[useAuth] Error fetching user profile:', error);
       }

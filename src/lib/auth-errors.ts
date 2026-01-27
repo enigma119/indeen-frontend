@@ -11,6 +11,7 @@ const errorMap: Record<string, string> = {
   'User already registered': 'Cet email est déjà utilisé',
   'Password should be at least 6 characters': 'Le mot de passe doit contenir au moins 6 caractères',
   'Unable to validate email address: invalid format': 'Format d\'email invalide',
+  'Database error saving new user': 'Erreur lors de la création du compte. L\'email est peut-être déjà utilisé.',
 
   // Password reset errors
   'Email rate limit exceeded': 'Trop de tentatives. Veuillez attendre quelques minutes',

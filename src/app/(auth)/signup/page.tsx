@@ -77,21 +77,9 @@ export default function SignupPage() {
         return;
       }
 
-      // Create user profile in backend
-      if (authData.user) {
-        try {
-          await apiClient.post('/auth/signup', {
-            supabase_id: authData.user.id,
-            email: data.email,
-            first_name: data.firstName,
-            last_name: data.lastName,
-            role: data.role,
-          });
-        } catch (apiError) {
-          console.error('[Signup] Error creating profile:', apiError);
-          // Continue even if backend call fails - user can retry later
-        }
-      }
+      // Note: The database trigger should automatically create the user in the database
+      // No need to call the backend - the trigger handles it
+      // The user will be created when they confirm their email
 
       setSuccess(true);
     } catch (err) {
