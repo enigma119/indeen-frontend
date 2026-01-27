@@ -124,9 +124,8 @@ export const useMentorOnboardingStore = create<MentorOnboardingStore>()(
             };
           case 4: // Step 5: Availability
             return {
-              availability: data.availability,
+              weeklyAvailability: data.weeklyAvailability,
               timezone: data.timezone,
-              maxStudentsPerWeek: data.maxStudentsPerWeek,
             };
           default:
             return {};
@@ -178,9 +177,13 @@ export const useMentorOnboardingStore = create<MentorOnboardingStore>()(
               data.minSessionDuration < data.maxSessionDuration
             );
           case 4: // Step 5: Availability
+            const totalSlots = (data.weeklyAvailability || []).reduce(
+              (sum, day) => sum + day.slots.length,
+              0
+            );
             return !!(
-              data.availability &&
-              data.availability.length > 0 &&
+              data.weeklyAvailability &&
+              totalSlots > 0 &&
               data.timezone
             );
           default:
@@ -199,8 +202,11 @@ export const useMentorOnboardingStore = create<MentorOnboardingStore>()(
           avatar: typeof state.data.avatar === 'string' ? state.data.avatar : undefined,
           // Don't persist File objects in certifications
           certifications: state.data.certifications?.map((cert) => ({
-            ...cert,
+            type: cert.type,
+            institution: cert.institution,
+            year: cert.year,
             documentUrl: typeof cert.documentUrl === 'string' ? cert.documentUrl : undefined,
+            // Don't persist documentFile
           })),
         },
         currentStep: state.currentStep,

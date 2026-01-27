@@ -108,6 +108,7 @@ export interface Certification {
   institution: string;
   year: number;
   documentUrl?: string;
+  documentFile?: File; // Temporary file object before upload
 }
 
 // Mentor Onboarding Data
@@ -152,9 +153,11 @@ export interface MentorOnboardingData {
   maxStudentsPerWeek: number;
 
   // Step 5: Availability
-  availability: Availability[];
+  weeklyAvailability: {
+    day: number; // 0=Sunday, 6=Saturday
+    slots: { start: string; end: string }[];
+  }[];
   timezone: string;
-  maxStudentsPerWeek?: number;
 }
 
 // Onboarding State

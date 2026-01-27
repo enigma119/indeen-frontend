@@ -84,10 +84,9 @@ export function CertificationItem({
         setPreview(null);
       }
 
-      // Store file URL (in real app, upload to Supabase and get URL)
-      // For now, we'll use a placeholder
-      const fileUrl = URL.createObjectURL(file);
-      onChange(index, { ...certification, documentUrl: fileUrl });
+      // Store file object temporarily - will be uploaded on submission
+      // We store it as a File object in the store, but convert to string for display
+      onChange(index, { ...certification, documentFile: file, documentUrl: undefined });
     },
     [certification, index, onChange]
   );
@@ -95,7 +94,7 @@ export function CertificationItem({
   const handleRemoveFile = useCallback(() => {
     setPreview(null);
     setFileError(null);
-    onChange(index, { ...certification, documentUrl: undefined });
+    onChange(index, { ...certification, documentUrl: undefined, documentFile: undefined });
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -105,8 +104,9 @@ export function CertificationItem({
     inputRef.current?.click();
   }, []);
 
-  const isImage = certification.documentUrl && preview;
-  const isPdf = certification.documentUrl && !preview && certification.documentUrl.endsWith('.pdf');
+  const hasDocument = certification.documentUrl || certification.documentFile;
+  const isImage = (certification.documentFile?.type.startsWith('image/') || (certification.documentUrl && preview));
+  const isPdf = (certification.documentFile?.type === 'application/pdf' || (certification.documentUrl && !preview && certification.documentUrl.includes('.pdf')));
 
   return (
     <Card className="border-2">
@@ -190,7 +190,7 @@ export function CertificationItem({
               className="hidden"
             />
 
-            {certification.documentUrl ? (
+            {hasDocument ? (
               <div className="space-y-2">
                 {/* Preview */}
                 {isImage && (

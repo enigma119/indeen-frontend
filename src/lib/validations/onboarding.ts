@@ -296,12 +296,12 @@ export const mentorStep4Schema = mentorStep4BaseSchema.refine(
 
 // Step 5: Availability
 const timeSlotSchema = z.object({
-  startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format invalide (HH:mm)'),
-  endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format invalide (HH:mm)'),
+  start: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format invalide (HH:mm)'),
+  end: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Format invalide (HH:mm)'),
 }).refine(
   (data) => {
-    const [startHour, startMin] = data.startTime.split(':').map(Number);
-    const [endHour, endMin] = data.endTime.split(':').map(Number);
+    const [startHour, startMin] = data.start.split(':').map(Number);
+    const [endHour, endMin] = data.end.split(':').map(Number);
     const startMinutes = startHour * 60 + startMin;
     const endMinutes = endHour * 60 + endMin;
     return endMinutes > startMinutes;
@@ -309,30 +309,32 @@ const timeSlotSchema = z.object({
   { message: 'L\'heure de fin doit être après l\'heure de début' }
 );
 
-const availabilitySchema = z.object({
-  day: z.enum([
-    'MONDAY',
-    'TUESDAY',
-    'WEDNESDAY',
-    'THURSDAY',
-    'FRIDAY',
-    'SATURDAY',
-    'SUNDAY',
-  ]),
-  slots: z.array(timeSlotSchema).min(1, 'Ajoutez au moins un créneau'),
+const weeklyAvailabilitySchema = z.object({
+  day: z.number().min(0).max(6), // 0=Sunday, 6=Saturday
+  slots: z.array(timeSlotSchema),
 });
 
-export const mentorStep5Schema = z.object({
-  availability: z
-    .array(availabilitySchema)
-    .min(1, 'Veuillez ajouter au moins un jour de disponibilité'),
+// Step 5: Weekly Availability (base schema)
+export const mentorStep5BaseSchema = z.object({
+  weeklyAvailability: z.array(weeklyAvailabilitySchema),
   timezone: z.string().min(1, 'Veuillez sélectionner votre fuseau horaire'),
-  maxStudentsPerWeek: z
-    .number()
-    .min(1, 'Minimum 1 étudiant')
-    .max(100, 'Maximum 100 étudiants')
-    .optional(),
 });
+
+// Step 5: with refinement
+export const mentorStep5Schema = mentorStep5BaseSchema.refine(
+  (data) => {
+    // At least 1 slot total across all days
+    const totalSlots = data.weeklyAvailability.reduce(
+      (sum, day) => sum + day.slots.length,
+      0
+    );
+    return totalSlots >= 1;
+  },
+  {
+    message: 'Veuillez ajouter au moins un créneau sur un jour',
+    path: ['weeklyAvailability'],
+  }
+);
 
 // ============================================
 // COMPLETE SCHEMAS
@@ -366,3 +368,4 @@ export type MentorStep5Data = z.infer<typeof mentorStep5Schema>;
 // Base types (without refinements)
 export type MentorStep3BaseData = z.infer<typeof mentorStep3BaseSchema>;
 export type MentorStep4BaseData = z.infer<typeof mentorStep4BaseSchema>;
+export type MentorStep5BaseData = z.infer<typeof mentorStep5BaseSchema>;
