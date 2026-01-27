@@ -116,43 +116,74 @@ export const menteeStep3Schema = menteeStep3BaseSchema.refine(
 // MENTOR STEP SCHEMAS
 // ============================================
 
-// Step 1: Personal Info (same as mentee)
-export const mentorStep1Schema = menteeStep1Schema;
+// Step 1: Personal Info (for mentors - avatar and phone are required)
+export const mentorStep1Schema = z.object({
+  firstName: z
+    .string()
+    .min(2, 'Le prénom doit contenir au moins 2 caractères')
+    .max(50, 'Le prénom ne peut pas dépasser 50 caractères'),
+  lastName: z
+    .string()
+    .min(2, 'Le nom doit contenir au moins 2 caractères')
+    .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
+  country: z
+    .string()
+    .min(2, 'Veuillez sélectionner un pays'),
+  phone: z
+    .string()
+    .min(1, 'Le numéro de téléphone est obligatoire pour les mentors')
+    .refine(
+      (val) => /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/.test(val),
+      'Numéro de téléphone invalide'
+    ),
+  gender: z.enum(['MALE', 'FEMALE', 'PREFER_NOT_TO_SAY']).optional(),
+  avatar: z.any().refine(
+    (val) => val !== undefined && val !== null,
+    'La photo de profil est obligatoire pour les mentors'
+  ),
+});
+
+// Certification schema
+const certificationSchema = z.object({
+  type: z.enum(['IJAZA', 'DIPLOMA', 'TRAINING', 'OTHER'], {
+    message: 'Veuillez sélectionner un type de certification',
+  }),
+  institution: z
+    .string()
+    .min(2, 'Le nom de l\'institution doit contenir au moins 2 caractères')
+    .max(200, 'Le nom de l\'institution ne peut pas dépasser 200 caractères'),
+  year: z
+    .number()
+    .min(1900, 'Année invalide')
+    .max(new Date().getFullYear(), 'L\'année ne peut pas être dans le futur'),
+  documentUrl: z.string().optional(),
+});
 
 // Step 2: Qualifications (base schema)
 export const mentorStep2BaseSchema = z.object({
-  bio: z
-    .string()
-    .min(50, 'La biographie doit contenir au moins 50 caractères')
-    .max(1000, 'La biographie ne peut pas dépasser 1000 caractères'),
   headline: z
     .string()
     .min(10, 'Le titre doit contenir au moins 10 caractères')
-    .max(100, 'Le titre ne peut pas dépasser 100 caractères'),
-  yearsOfExperience: z
+    .max(200, 'Le titre ne peut pas dépasser 200 caractères'),
+  bio: z
+    .string()
+    .min(100, 'La biographie doit contenir au moins 100 caractères')
+    .max(1000, 'La biographie ne peut pas dépasser 1000 caractères'),
+  yearsExperience: z
     .number()
     .min(0, 'L\'expérience ne peut pas être négative')
     .max(50, 'Veuillez vérifier vos années d\'expérience'),
   certifications: z
-    .array(z.string())
+    .array(certificationSchema)
+    .min(1, 'Veuillez ajouter au moins une certification')
+    .max(5, 'Maximum 5 certifications'),
+  education: z
+    .string()
     .optional(),
-  hasIjaza: z.boolean(),
-  ijazaDetails: z.string().optional(),
 });
 
 // Step 2: with refinement
-export const mentorStep2Schema = mentorStep2BaseSchema.refine(
-  (data) => {
-    if (data.hasIjaza) {
-      return data.ijazaDetails && data.ijazaDetails.trim().length > 0;
-    }
-    return true;
-  },
-  {
-    message: 'Veuillez décrire votre Ijaza',
-    path: ['ijazaDetails'],
-  }
-);
+export const mentorStep2Schema = mentorStep2BaseSchema;
 
 // Step 3: Skills
 export const mentorStep3Schema = z.object({

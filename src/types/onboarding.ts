@@ -102,22 +102,30 @@ export interface Availability {
   slots: TimeSlot[];
 }
 
+// Certification
+export interface Certification {
+  type: 'IJAZA' | 'DIPLOMA' | 'TRAINING' | 'OTHER';
+  institution: string;
+  year: number;
+  documentUrl?: string;
+}
+
 // Mentor Onboarding Data
 export interface MentorOnboardingData {
   // Step 1: Personal Info
   firstName: string;
   lastName: string;
   country: string;
-  phone?: string;
-  avatar?: File | string;
+  phone: string; // Required for mentors
+  gender?: Gender;
+  avatar: File | string; // Required for mentors
 
   // Step 2: Qualifications
-  bio: string;
   headline: string;
-  yearsOfExperience: number;
-  certifications: string[];
-  hasIjaza: boolean;
-  ijazaDetails?: string;
+  bio: string;
+  yearsExperience: number;
+  certifications: Certification[];
+  education?: string;
 
   // Step 3: Skills
   specialties: Specialty[];
