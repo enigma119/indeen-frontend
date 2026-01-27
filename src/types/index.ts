@@ -30,3 +30,21 @@ export interface MenteeProfile {
   current_level: string;
   learning_goals: string[];
 }
+
+// Auth types
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignupData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: 'MENTOR' | 'MENTEE';
+}
+
+export interface ResetPasswordData {
+  email: string;
+}
