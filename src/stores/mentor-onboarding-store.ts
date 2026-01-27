@@ -98,16 +98,29 @@ export const useMentorOnboardingStore = create<MentorOnboardingStore>()(
             };
           case 2: // Step 3: Skills
             return {
-              specialties: data.specialties,
               languages: data.languages,
+              nativeLanguage: data.nativeLanguage,
+              specialties: data.specialties,
+              teachesChildren: data.teachesChildren,
+              teachesTeenagers: data.teachesTeenagers,
+              teachesAdults: data.teachesAdults,
+              beginnerFriendly: data.beginnerFriendly,
+              patientWithSlowLearners: data.patientWithSlowLearners,
+              experiencedWithNewMuslims: data.experiencedWithNewMuslims,
+              specialNeedsSupport: data.specialNeedsSupport,
+              acceptedLevels: data.acceptedLevels,
               teachingMethodology: data.teachingMethodology,
             };
           case 3: // Step 4: Pricing
             return {
+              freeSessionsOnly: data.freeSessionsOnly,
               hourlyRate: data.hourlyRate,
               currency: data.currency,
-              offersFreeSession: data.offersFreeSession,
-              packageDeals: data.packageDeals,
+              freeTrialAvailable: data.freeTrialAvailable,
+              freeTrialDuration: data.freeTrialDuration,
+              minSessionDuration: data.minSessionDuration,
+              maxSessionDuration: data.maxSessionDuration,
+              maxStudentsPerWeek: data.maxStudentsPerWeek,
             };
           case 4: // Step 5: Availability
             return {
@@ -141,15 +154,28 @@ export const useMentorOnboardingStore = create<MentorOnboardingStore>()(
             );
           case 2: // Step 3: Skills
             return !!(
+              data.languages &&
+              data.languages.length > 0 &&
               data.specialties &&
               data.specialties.length > 0 &&
-              data.languages &&
-              data.languages.length > 0
+              (data.teachesChildren || data.teachesTeenagers || data.teachesAdults)
             );
           case 3: // Step 4: Pricing
+            if (data.freeSessionsOnly) {
+              return !!(
+                data.minSessionDuration !== undefined &&
+                data.maxSessionDuration !== undefined &&
+                data.maxStudentsPerWeek !== undefined
+              );
+            }
             return !!(
               data.hourlyRate !== undefined &&
-              data.currency
+              data.hourlyRate > 0 &&
+              data.currency &&
+              data.minSessionDuration !== undefined &&
+              data.maxSessionDuration !== undefined &&
+              data.maxStudentsPerWeek !== undefined &&
+              data.minSessionDuration < data.maxSessionDuration
             );
           case 4: // Step 5: Availability
             return !!(

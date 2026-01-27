@@ -185,8 +185,12 @@ export const mentorStep2BaseSchema = z.object({
 // Step 2: with refinement
 export const mentorStep2Schema = mentorStep2BaseSchema;
 
-// Step 3: Skills
-export const mentorStep3Schema = z.object({
+// Step 3: Skills (base schema)
+export const mentorStep3BaseSchema = z.object({
+  languages: z
+    .array(z.enum(['fr', 'ar', 'en', 'es', 'de', 'tr', 'ur']))
+    .min(1, 'Veuillez sélectionner au moins une langue'),
+  nativeLanguage: z.string().optional(),
   specialties: z
     .array(z.enum([
       'TAJWEED',
@@ -198,32 +202,97 @@ export const mentorStep3Schema = z.object({
       'AQIDA',
       'HADITH',
     ]))
-    .min(1, 'Veuillez sélectionner au moins une spécialité'),
-  languages: z
-    .array(z.enum(['fr', 'ar', 'en', 'es', 'de', 'tr', 'ur']))
-    .min(1, 'Veuillez sélectionner au moins une langue'),
-  teachingMethodology: z.string().optional(),
-});
-
-// Step 4: Pricing
-export const mentorStep4Schema = z.object({
-  hourlyRate: z
-    .number()
-    .min(5, 'Le tarif minimum est de 5')
-    .max(500, 'Le tarif maximum est de 500'),
-  currency: z.enum(['EUR', 'USD', 'GBP', 'MAD', 'TND', 'DZD'], {
-    message: 'Veuillez sélectionner une devise',
-  }),
-  offersFreeSession: z.boolean(),
-  packageDeals: z
-    .array(
-      z.object({
-        sessions: z.number().min(2).max(50),
-        discountPercent: z.number().min(1).max(50),
-      })
-    )
+    .min(1, 'Veuillez sélectionner au moins une spécialité')
+    .max(5, 'Maximum 5 spécialités'),
+  teachesChildren: z.boolean().default(false),
+  teachesTeenagers: z.boolean().default(false),
+  teachesAdults: z.boolean().default(false),
+  beginnerFriendly: z.boolean().default(false),
+  patientWithSlowLearners: z.boolean().default(false),
+  experiencedWithNewMuslims: z.boolean().default(false),
+  specialNeedsSupport: z.boolean().default(false),
+  acceptedLevels: z
+    .array(z.enum([
+      'NO_ARABIC',
+      'ARABIC_BEGINNER',
+      'ARABIC_INTERMEDIATE',
+      'ARABIC_ADVANCED',
+      'QURAN_BEGINNER',
+      'QURAN_INTERMEDIATE',
+      'QURAN_ADVANCED',
+    ]))
     .optional(),
 });
+
+// Step 3: with refinement
+export const mentorStep3Schema = mentorStep3BaseSchema.refine(
+  (data) => {
+    // At least one type of student must be selected
+    return data.teachesChildren || data.teachesTeenagers || data.teachesAdults;
+  },
+  {
+    message: 'Veuillez sélectionner au moins un type d\'étudiant',
+    path: ['teachesChildren'],
+  }
+);
+
+// Step 4: Pricing (base schema)
+export const mentorStep4BaseSchema = z.object({
+  freeSessionsOnly: z.boolean().default(false),
+  hourlyRate: z.number().optional(),
+  currency: z.enum(['EUR', 'USD', 'GBP', 'MAD', 'TND', 'DZD']).optional(),
+  freeTrialAvailable: z.boolean().default(false),
+  freeTrialDuration: z.number().optional(),
+  minSessionDuration: z
+    .number()
+    .min(30, 'La durée minimale est de 30 minutes')
+    .max(180, 'La durée maximale est de 180 minutes'),
+  maxSessionDuration: z
+    .number()
+    .min(60, 'La durée minimale est de 60 minutes')
+    .max(180, 'La durée maximale est de 180 minutes'),
+  maxStudentsPerWeek: z
+    .number()
+    .min(1, 'Minimum 1 étudiant')
+    .max(50, 'Maximum 50 étudiants')
+    .default(20),
+});
+
+// Step 4: with refinement
+export const mentorStep4Schema = mentorStep4BaseSchema.refine(
+  (data) => {
+    // If not free sessions only, hourlyRate and currency are required
+    if (!data.freeSessionsOnly) {
+      return data.hourlyRate !== undefined && data.hourlyRate > 0 && data.currency !== undefined;
+    }
+    return true;
+  },
+  {
+    message: 'Le tarif horaire et la devise sont requis si vous facturez',
+    path: ['hourlyRate'],
+  }
+).refine(
+  (data) => {
+    // minSessionDuration must be less than maxSessionDuration
+    return data.minSessionDuration < data.maxSessionDuration;
+  },
+  {
+    message: 'La durée minimale doit être inférieure à la durée maximale',
+    path: ['maxSessionDuration'],
+  }
+).refine(
+  (data) => {
+    // If freeTrialAvailable is true, freeTrialDuration is required
+    if (data.freeTrialAvailable) {
+      return data.freeTrialDuration !== undefined;
+    }
+    return true;
+  },
+  {
+    message: 'Veuillez sélectionner la durée de l\'essai gratuit',
+    path: ['freeTrialDuration'],
+  }
+);
 
 // Step 5: Availability
 const timeSlotSchema = z.object({
@@ -293,3 +362,7 @@ export type MentorStep2Data = z.infer<typeof mentorStep2Schema>;
 export type MentorStep3Data = z.infer<typeof mentorStep3Schema>;
 export type MentorStep4Data = z.infer<typeof mentorStep4Schema>;
 export type MentorStep5Data = z.infer<typeof mentorStep5Schema>;
+
+// Base types (without refinements)
+export type MentorStep3BaseData = z.infer<typeof mentorStep3BaseSchema>;
+export type MentorStep4BaseData = z.infer<typeof mentorStep4BaseSchema>;

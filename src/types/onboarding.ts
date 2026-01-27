@@ -128,18 +128,28 @@ export interface MentorOnboardingData {
   education?: string;
 
   // Step 3: Skills
-  specialties: Specialty[];
   languages: Language[];
+  nativeLanguage?: Language;
+  specialties: Specialty[];
+  teachesChildren: boolean;
+  teachesTeenagers: boolean;
+  teachesAdults: boolean;
+  beginnerFriendly?: boolean;
+  patientWithSlowLearners?: boolean;
+  experiencedWithNewMuslims?: boolean;
+  specialNeedsSupport?: boolean;
+  acceptedLevels?: LearningLevel[];
   teachingMethodology?: string;
 
   // Step 4: Pricing
-  hourlyRate: number;
-  currency: string;
-  offersFreeSession: boolean;
-  packageDeals?: {
-    sessions: number;
-    discountPercent: number;
-  }[];
+  freeSessionsOnly: boolean;
+  hourlyRate?: number;
+  currency?: string;
+  freeTrialAvailable?: boolean;
+  freeTrialDuration?: number;
+  minSessionDuration: number;
+  maxSessionDuration: number;
+  maxStudentsPerWeek: number;
 
   // Step 5: Availability
   availability: Availability[];
