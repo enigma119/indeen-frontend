@@ -58,3 +58,40 @@ export const signupSchema = z
   });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
+
+/**
+ * Reset password form validation schema
+ */
+export const resetPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'L\'email est requis')
+    .email('Format d\'email invalide'),
+});
+
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+/**
+ * Update password form validation schema
+ */
+export const updatePasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+      .regex(
+        /[A-Z]/,
+        'Le mot de passe doit contenir au moins une majuscule'
+      )
+      .regex(
+        /[0-9]/,
+        'Le mot de passe doit contenir au moins un chiffre'
+      ),
+    confirmPassword: z.string().min(1, 'Veuillez confirmer le mot de passe'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['confirmPassword'],
+  });
+
+export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
