@@ -54,6 +54,7 @@ export interface ResetPasswordData {
 // ============================================
 
 export interface SearchFilters {
+  query?: string;
   languages?: string[];
   specialties?: string[];
   minPrice?: number;
