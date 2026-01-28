@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMentorOnboardingStore } from '@/stores/mentor-onboarding-store';
-import { mentorStep3Schema, type MentorStep3Data } from '@/lib/validations/onboarding';
+import { mentorStep3BaseSchema, type MentorStep3BaseData } from '@/lib/validations/onboarding';
 import { FormSection, StepNavigation, SpecialtyCard } from '@/components/onboarding';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -34,12 +34,12 @@ export default function MentorStep3Page() {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm<MentorStep3Data>({
-    resolver: zodResolver(mentorStep3Schema),
+  } = useForm<MentorStep3BaseData>({
+    resolver: zodResolver(mentorStep3BaseSchema),
     mode: 'onChange',
     defaultValues: {
       languages: data.languages || [],
-      nativeLanguage: data.nativeLanguage || '',
+      nativeLanguage: data.nativeLanguage,
       specialties: data.specialties || [],
       teachesChildren: data.teachesChildren || false,
       teachesTeenagers: data.teachesTeenagers || false,
@@ -71,7 +71,7 @@ export default function MentorStep3Page() {
     );
   }, [watchedFields.acceptedLevels]);
 
-  const onSubmit = (formData: MentorStep3Data) => {
+  const onSubmit = (formData: MentorStep3BaseData) => {
     updateData(formData);
     router.push('/onboarding/mentor/step-4');
   };
@@ -166,7 +166,7 @@ export default function MentorStep3Page() {
               <Label htmlFor="nativeLanguage">Langue maternelle (optionnel)</Label>
               <Select
                 value={watchedFields.nativeLanguage}
-                onValueChange={(value) => setValue('nativeLanguage', value, { shouldValidate: true })}
+                onValueChange={(value) => setValue('nativeLanguage', value as Language, { shouldValidate: true })}
               >
                 <SelectTrigger id="nativeLanguage">
                   <SelectValue placeholder="Sélectionnez votre langue maternelle" />

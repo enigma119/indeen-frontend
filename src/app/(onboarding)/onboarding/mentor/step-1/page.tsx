@@ -106,7 +106,7 @@ export default function MentorStep1Page() {
               error={errors.avatar?.message as string}
             />
             {errors.avatar && (
-              <p className="mt-2 text-sm text-red-500">{errors.avatar.message}</p>
+              <p className="mt-2 text-sm text-red-500">{errors.avatar.message as string}</p>
             )}
           </div>
 

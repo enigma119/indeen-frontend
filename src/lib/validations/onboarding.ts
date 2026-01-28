@@ -190,7 +190,7 @@ export const mentorStep3BaseSchema = z.object({
   languages: z
     .array(z.enum(['fr', 'ar', 'en', 'es', 'de', 'tr', 'ur']))
     .min(1, 'Veuillez sélectionner au moins une langue'),
-  nativeLanguage: z.string().optional(),
+  nativeLanguage: z.enum(['fr', 'ar', 'en', 'es', 'de', 'tr', 'ur']).optional(),
   specialties: z
     .array(z.enum([
       'TAJWEED',
@@ -204,13 +204,13 @@ export const mentorStep3BaseSchema = z.object({
     ]))
     .min(1, 'Veuillez sélectionner au moins une spécialité')
     .max(5, 'Maximum 5 spécialités'),
-  teachesChildren: z.boolean().default(false),
-  teachesTeenagers: z.boolean().default(false),
-  teachesAdults: z.boolean().default(false),
-  beginnerFriendly: z.boolean().default(false),
-  patientWithSlowLearners: z.boolean().default(false),
-  experiencedWithNewMuslims: z.boolean().default(false),
-  specialNeedsSupport: z.boolean().default(false),
+  teachesChildren: z.boolean().optional(),
+  teachesTeenagers: z.boolean().optional(),
+  teachesAdults: z.boolean().optional(),
+  beginnerFriendly: z.boolean().optional(),
+  patientWithSlowLearners: z.boolean().optional(),
+  experiencedWithNewMuslims: z.boolean().optional(),
+  specialNeedsSupport: z.boolean().optional(),
   acceptedLevels: z
     .array(z.enum([
       'NO_ARABIC',
@@ -238,10 +238,10 @@ export const mentorStep3Schema = mentorStep3BaseSchema.refine(
 
 // Step 4: Pricing (base schema)
 export const mentorStep4BaseSchema = z.object({
-  freeSessionsOnly: z.boolean().default(false),
+  freeSessionsOnly: z.boolean().optional(),
   hourlyRate: z.number().optional(),
   currency: z.enum(['EUR', 'USD', 'GBP', 'MAD', 'TND', 'DZD']).optional(),
-  freeTrialAvailable: z.boolean().default(false),
+  freeTrialAvailable: z.boolean().optional(),
   freeTrialDuration: z.number().optional(),
   minSessionDuration: z
     .number()
@@ -254,8 +254,7 @@ export const mentorStep4BaseSchema = z.object({
   maxStudentsPerWeek: z
     .number()
     .min(1, 'Minimum 1 étudiant')
-    .max(50, 'Maximum 50 étudiants')
-    .default(20),
+    .max(50, 'Maximum 50 étudiants'),
 });
 
 // Step 4: with refinement

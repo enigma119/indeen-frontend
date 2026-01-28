@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMentorOnboardingStore } from '@/stores/mentor-onboarding-store';
-import { mentorStep4Schema, type MentorStep4Data } from '@/lib/validations/onboarding';
+import { mentorStep4BaseSchema, type MentorStep4BaseData } from '@/lib/validations/onboarding';
 import { FormSection, StepNavigation, PricingEstimator } from '@/components/onboarding';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -40,13 +40,13 @@ export default function MentorStep4Page() {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm<MentorStep4Data>({
-    resolver: zodResolver(mentorStep4Schema),
+  } = useForm<MentorStep4BaseData>({
+    resolver: zodResolver(mentorStep4BaseSchema),
     mode: 'onChange',
     defaultValues: {
       freeSessionsOnly: data.freeSessionsOnly || false,
       hourlyRate: data.hourlyRate,
-      currency: data.currency || 'EUR',
+      currency: (data.currency || 'EUR') as 'EUR' | 'USD' | 'GBP' | 'MAD' | 'TND' | 'DZD',
       freeTrialAvailable: data.freeTrialAvailable || false,
       freeTrialDuration: data.freeTrialDuration,
       minSessionDuration: data.minSessionDuration || 30,
@@ -67,7 +67,7 @@ export default function MentorStep4Page() {
     return () => clearTimeout(timeout);
   }, [watchedFields, updateData]);
 
-  const onSubmit = (formData: MentorStep4Data) => {
+  const onSubmit = (formData: MentorStep4BaseData) => {
     updateData(formData);
     router.push('/onboarding/mentor/step-5');
   };
@@ -185,7 +185,7 @@ export default function MentorStep4Page() {
                   <Select
                     value={watchedFields.currency}
                     onValueChange={(value) =>
-                      setValue('currency', value as MentorStep4Data['currency'], {
+                      setValue('currency', value as MentorStep4BaseData['currency'], {
                         shouldValidate: true,
                       })
                     }

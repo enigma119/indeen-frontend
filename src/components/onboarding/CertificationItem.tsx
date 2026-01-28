@@ -196,7 +196,7 @@ export function CertificationItem({
                 {isImage && (
                   <div className="relative border rounded-lg overflow-hidden">
                     <img
-                      src={preview}
+                      src={preview || undefined}
                       alt="Preview"
                       className="w-full h-48 object-cover"
                     />
