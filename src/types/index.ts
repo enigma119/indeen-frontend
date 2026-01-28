@@ -48,3 +48,72 @@ export interface SignupData {
 export interface ResetPasswordData {
   email: string;
 }
+
+// ============================================
+// SEARCH TYPES
+// ============================================
+
+export interface SearchFilters {
+  languages?: string[];
+  specialties?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
+  teachesChildren?: boolean;
+  teachesTeenagers?: boolean;
+  teachesAdults?: boolean;
+  beginnerFriendly?: boolean;
+  experiencedWithNewMuslims?: boolean;
+  freeTrialAvailable?: boolean;
+  freeSessionsOnly?: boolean;
+  country?: string;
+  acceptedLevels?: string[];
+}
+
+export type SortBy = 'rating' | 'price_asc' | 'price_desc' | 'experience' | 'reviews';
+
+export interface SortOption {
+  value: SortBy;
+  label: string;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+}
+
+export interface MentorSearchResult {
+  mentors: MentorProfile[];
+  total: number;
+  page: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+// ============================================
+// AVAILABILITY & REVIEWS TYPES
+// ============================================
+
+export interface AvailabilitySlot {
+  id: string;
+  mentor_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  is_available: boolean;
+  date?: string;
+}
+
+export interface Review {
+  id: string;
+  mentor_id: string;
+  mentee_id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+  mentee?: {
+    first_name: string;
+    last_name: string;
+    avatar_url?: string;
+  };
+}
