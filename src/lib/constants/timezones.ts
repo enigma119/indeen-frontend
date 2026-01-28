@@ -1,0 +1,20 @@
+// Common timezones for mentor availability
+export const TIMEZONES = [
+  { value: 'Europe/Paris', label: 'Europe/Paris (UTC+1/+2)' },
+  { value: 'Europe/London', label: 'Europe/London (UTC+0/+1)' },
+  { value: 'America/New_York', label: 'America/New_York (UTC-5/-4)' },
+  { value: 'America/Los_Angeles', label: 'America/Los_Angeles (UTC-8/-7)' },
+  { value: 'America/Toronto', label: 'America/Toronto (UTC-5/-4)' },
+  { value: 'Africa/Casablanca', label: 'Africa/Casablanca (UTC+1)' },
+  { value: 'Africa/Dakar', label: 'Africa/Dakar (UTC+0)' },
+  { value: 'Africa/Algiers', label: 'Africa/Algiers (UTC+1)' },
+  { value: 'Africa/Tunis', label: 'Africa/Tunis (UTC+1)' },
+  { value: 'Asia/Riyadh', label: 'Asia/Riyadh (UTC+3)' },
+  { value: 'Asia/Dubai', label: 'Asia/Dubai (UTC+4)' },
+  { value: 'Asia/Karachi', label: 'Asia/Karachi (UTC+5)' },
+  { value: 'Asia/Dhaka', label: 'Asia/Dhaka (UTC+6)' },
+  { value: 'Asia/Jakarta', label: 'Asia/Jakarta (UTC+7)' },
+  { value: 'Asia/Kuala_Lumpur', label: 'Asia/Kuala_Lumpur (UTC+8)' },
+  { value: 'Europe/Istanbul', label: 'Europe/Istanbul (UTC+3)' },
+  { value: 'UTC', label: 'UTC (UTC+0)' },
+];

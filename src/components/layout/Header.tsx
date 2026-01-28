@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from './Logo';
 import { MobileNav } from './MobileNav';
 import { UserMenu } from './UserMenu';
+import { useAuth } from '@/hooks/use-auth';
 
 const navItems = [
   { label: 'Accueil', href: '/' },
@@ -16,16 +17,9 @@ const navItems = [
   { label: 'Blog', href: '/blog' },
 ];
 
-interface HeaderProps {
-  user?: {
-    name: string;
-    email: string;
-    avatar_url?: string;
-  };
-}
-
-export function Header({ user }: HeaderProps) {
+export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,8 +29,6 @@ export function Header({ user }: HeaderProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const isAuthenticated = !!user;
 
   return (
     <header
@@ -67,8 +59,14 @@ export function Header({ user }: HeaderProps) {
 
           {/* Right side - Auth buttons */}
           <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <UserMenu user={user} />
+            {isAuthenticated && user ? (
+              <UserMenu
+                user={{
+                  name: `${user.first_name} ${user.last_name}`,
+                  email: user.email,
+                  avatar_url: user.avatar_url,
+                }}
+              />
             ) : (
               <div className="hidden md:flex items-center gap-3">
                 <Button
@@ -76,13 +74,13 @@ export function Header({ user }: HeaderProps) {
                   variant="ghost"
                   className="text-navy-700 hover:text-navy-900 hover:bg-navy-100/50 rounded-full px-6"
                 >
-                  <Link href="/connexion">Connexion</Link>
+                  <Link href="/login">Connexion</Link>
                 </Button>
                 <Button
                   asChild
                   className="bg-navy-800 hover:bg-navy-900 text-white rounded-full px-6"
                 >
-                  <Link href="/inscription">S&apos;inscrire</Link>
+                  <Link href="/signup">S&apos;inscrire</Link>
                 </Button>
               </div>
             )}
