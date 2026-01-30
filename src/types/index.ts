@@ -12,15 +12,47 @@ export interface User {
 export interface MentorProfile {
   id: string;
   user_id: string;
+  slug: string;
   bio: string;
   headline: string;
   languages: string[];
+  native_language?: string;
   specialties: string[];
   hourly_rate: number;
   currency: string;
   average_rating: number;
   total_reviews: number;
   is_active: boolean;
+  // Profile details
+  verification_status?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  years_of_experience?: number;
+  total_sessions?: number;
+  total_students?: number;
+  average_response_time?: number; // in minutes
+  free_trial_available?: boolean;
+  // Teaching capabilities
+  teaches_children?: boolean;
+  teaches_teenagers?: boolean;
+  teaches_adults?: boolean;
+  beginner_friendly?: boolean;
+  patient_with_slow_learners?: boolean;
+  experienced_with_new_muslims?: boolean;
+  accepted_levels?: string[];
+  // Academic info
+  academic_background?: string;
+  certifications?: Certification[];
+  // User info (populated from join)
+  user?: User;
+  created_at?: string;
+}
+
+export interface Certification {
+  id: string;
+  type: string;
+  name: string;
+  institution?: string;
+  year?: number;
+  document_url?: string;
 }
 
 export interface MenteeProfile {
@@ -47,4 +79,100 @@ export interface SignupData {
 
 export interface ResetPasswordData {
   email: string;
+}
+
+// ============================================
+// SEARCH TYPES
+// ============================================
+
+export interface SearchFilters {
+  query?: string;
+  languages?: string[];
+  specialties?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
+  teachesChildren?: boolean;
+  teachesTeenagers?: boolean;
+  teachesAdults?: boolean;
+  beginnerFriendly?: boolean;
+  experiencedWithNewMuslims?: boolean;
+  freeTrialAvailable?: boolean;
+  freeSessionsOnly?: boolean;
+  country?: string;
+  acceptedLevels?: string[];
+}
+
+export type SortBy = 'rating' | 'price_asc' | 'price_desc' | 'experience' | 'reviews';
+
+export interface SortOption {
+  value: SortBy;
+  label: string;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+}
+
+export interface MentorSearchResult {
+  mentors: MentorProfile[];
+  total: number;
+  page: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+// ============================================
+// AVAILABILITY & REVIEWS TYPES
+// ============================================
+
+export interface AvailabilitySlot {
+  id: string;
+  mentor_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  is_available: boolean;
+  date?: string;
+}
+
+export interface Review {
+  id: string;
+  mentor_id: string;
+  mentee_id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+  mentor_response?: string;
+  mentor_response_at?: string;
+  mentee?: {
+    first_name: string;
+    last_name: string;
+    avatar_url?: string;
+  };
+}
+
+export interface ReviewsResult {
+  reviews: Review[];
+  total: number;
+  totalPages: number;
+  ratingDistribution?: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+}
+
+export interface ReportReason {
+  value: string;
+  label: string;
+}
+
+export interface MentorReport {
+  mentor_id: string;
+  reason: string;
+  description: string;
 }

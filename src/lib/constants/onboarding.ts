@@ -70,6 +70,12 @@ export const MENTOR_STEPS: OnboardingStep[] = [
     description: 'Configurez vos créneaux disponibles',
     isOptional: false,
   },
+  {
+    id: 'confirmation',
+    title: 'Confirmation',
+    description: 'Vérifiez et soumettez votre profil',
+    isOptional: false,
+  },
 ];
 
 // Learning Levels

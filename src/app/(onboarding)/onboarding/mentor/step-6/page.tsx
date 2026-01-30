@@ -51,7 +51,7 @@ const getLabel = <T extends { value: string; label: string }>(
 
 export default function MentorStep6Page() {
   const router = useRouter();
-  const { user, refreshProfile } = useAuthStore();
+  const { user } = useAuthStore();
   const { data, reset, setSubmitting } = useMentorOnboardingStore();
   const [isLoading, setIsLoading] = useState(false);
   const [availabilityDialogOpen, setAvailabilityDialogOpen] = useState(false);
@@ -120,9 +120,6 @@ export default function MentorStep6Page() {
     try {
       // Create mentor profile (includes uploads)
       await createMentorProfile(data, user.id);
-
-      // Refresh user profile
-      await refreshProfile();
 
       toast.success('Profil soumis ! Vérification en cours...', {
         description: 'Vous recevrez un email sous 48h.',
