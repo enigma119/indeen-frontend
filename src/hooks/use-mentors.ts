@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   searchMentors,
   getMentorById,
@@ -7,8 +7,9 @@ import {
   getMentorReviews,
   getFeaturedMentors,
   getSimilarMentors,
+  reportMentor,
 } from '@/lib/api/search';
-import type { SearchFilters, SortBy } from '@/types';
+import type { SearchFilters, SortBy, MentorReport } from '@/types';
 import { DEFAULT_PAGE_SIZE } from '@/lib/constants/search';
 
 // ============================================
@@ -144,5 +145,18 @@ export function useSimilarMentors(mentorId: string | undefined, limit: number = 
     queryFn: () => getSimilarMentors(mentorId!, limit),
     enabled: !!mentorId,
     staleTime: 1000 * 60 * 10, // 10 minutes
+  });
+}
+
+// ============================================
+// REPORT MUTATION
+// ============================================
+
+/**
+ * Hook to report a mentor profile
+ */
+export function useReportMentor() {
+  return useMutation({
+    mutationFn: (report: MentorReport) => reportMentor(report),
   });
 }

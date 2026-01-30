@@ -6,7 +6,8 @@ import type {
   MentorSearchResult,
   MentorProfile,
   AvailabilitySlot,
-  Review,
+  ReviewsResult,
+  MentorReport,
 } from '@/types';
 import { DEFAULT_PAGE_SIZE } from '@/lib/constants/search';
 
@@ -112,8 +113,8 @@ export async function getMentorReviews(
   mentorId: string,
   page: number = 1,
   limit: number = 10
-): Promise<{ reviews: Review[]; total: number; totalPages: number }> {
-  return apiClient.get(`/mentors/${mentorId}/reviews?page=${page}&limit=${limit}`);
+): Promise<ReviewsResult> {
+  return apiClient.get<ReviewsResult>(`/mentors/${mentorId}/reviews?page=${page}&limit=${limit}`);
 }
 
 /**
@@ -131,4 +132,14 @@ export async function getSimilarMentors(
   limit: number = 4
 ): Promise<MentorProfile[]> {
   return apiClient.get<MentorProfile[]>(`/mentors/${mentorId}/similar?limit=${limit}`);
+}
+
+/**
+ * Report a mentor profile
+ */
+export async function reportMentor(report: MentorReport): Promise<void> {
+  return apiClient.post(`/mentors/${report.mentor_id}/report`, {
+    reason: report.reason,
+    description: report.description,
+  });
 }
