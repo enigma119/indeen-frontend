@@ -176,3 +176,75 @@ export interface MentorReport {
   reason: string;
   description: string;
 }
+
+// ============================================
+// SESSION & BOOKING TYPES
+// ============================================
+
+export type SessionStatus =
+  | 'SCHEDULED'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'CANCELLED_BY_MENTOR'
+  | 'CANCELLED_BY_MENTEE'
+  | 'NO_SHOW_MENTOR'
+  | 'NO_SHOW_MENTEE';
+
+export interface Session {
+  id: string;
+  mentor_profile_id: string;
+  mentee_profile_id: string;
+  scheduled_at: string;
+  scheduled_end_at: string;
+  duration: number; // in minutes
+  status: SessionStatus;
+  timezone: string;
+  meeting_url?: string;
+  lesson_plan?: string;
+  cancellation_reason?: string;
+  cancelled_at?: string;
+  created_at: string;
+  updated_at: string;
+  // Populated relations
+  mentor_profile?: MentorProfile;
+  mentee_profile?: MenteeProfile & { user?: User };
+}
+
+export interface BookingRequest {
+  mentor_id: string;
+  scheduled_at: string; // ISO date string
+  duration: number; // in minutes (30, 60, 90, 120)
+  timezone: string;
+  lesson_plan?: string;
+}
+
+export interface BookingSlot {
+  date: string; // ISO date string
+  start_time: string; // format "HH:mm"
+  end_time: string; // format "HH:mm"
+  is_available: boolean;
+  mentor_id: string;
+}
+
+export interface DayAvailability {
+  date: string;
+  slots: BookingSlot[];
+  has_availability: boolean;
+}
+
+export interface SessionsResult {
+  sessions: Session[];
+  total: number;
+  page: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+export type SessionDuration = 30 | 60 | 90 | 120;
+
+export interface DurationOption {
+  value: SessionDuration;
+  label: string;
+  price: number;
+  recommended?: boolean;
+}
