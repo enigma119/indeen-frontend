@@ -191,3 +191,45 @@ export async function checkSlotAvailability(
 export async function createFreeSession(booking: BookingRequest): Promise<Session> {
   return apiClient.post<Session>('/sessions/create-free', booking);
 }
+
+// =====================
+// Mentor Actions
+// =====================
+
+/**
+ * Confirm a session (mentor action)
+ * @param sessionId - The session ID
+ */
+export async function confirmSession(sessionId: string): Promise<Session> {
+  return apiClient.patch<Session>(`/sessions/${sessionId}/confirm`);
+}
+
+/**
+ * Reject a session (mentor action)
+ * @param sessionId - The session ID
+ * @param reason - Rejection reason
+ */
+export async function rejectSession(
+  sessionId: string,
+  reason: string
+): Promise<Session> {
+  return apiClient.patch<Session>(`/sessions/${sessionId}/reject`, { reason });
+}
+
+/**
+ * Get mentor's teaching sessions
+ * @param status - Filter by status
+ * @param page - Page number
+ * @param limit - Items per page
+ */
+export async function getMyTeachingSessions(
+  status?: 'pending' | 'upcoming' | 'past' | 'cancelled',
+  page: number = 1,
+  limit: number = 10
+): Promise<SessionsResult> {
+  const params: Record<string, string | number> = { page, limit };
+  if (status) {
+    params.status = status;
+  }
+  return apiClient.get<SessionsResult>('/sessions/teaching', { params });
+}
