@@ -16,8 +16,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
 import { getAuthErrorMessage } from '@/lib/auth-errors';
-import { apiClient } from '@/lib/api/client';
-import type { User } from '@/types';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,28 +42,6 @@ export default function LoginPage() {
 
   const remember = watch('remember');
 
-  /**
-   * Get redirect URL based on user role
-   */
-  const getRedirectUrl = (user: User): string => {
-    // If there's a specific redirect URL, use it
-    if (redirectTo) {
-      return redirectTo;
-    }
-
-    // Otherwise, redirect based on role
-    switch (user.role) {
-      case 'MENTOR':
-        return '/dashboard';
-      case 'MENTEE':
-        return '/mentors';
-      case 'ADMIN':
-        return '/admin';
-      default:
-        return '/dashboard';
-    }
-  };
-
   const onSubmit = async (data: LoginFormData) => {
     setError(null);
     setIsLoading(true);
@@ -77,7 +53,7 @@ export default function LoginPage() {
         return;
       }
 
-      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
@@ -87,24 +63,14 @@ export default function LoginPage() {
         return;
       }
 
-      // Fetch user profile to get role for redirect
-      let userProfile: User | null = null;
-      if (authData.user) {
-        try {
-          userProfile = await apiClient.get<User>(`/users/${authData.user.id}`);
-        } catch {
-          // Continue even if profile fetch fails
-          console.error('[Login] Error fetching user profile');
-        }
-      }
-
       // Show success toast
       toast.success('Bienvenue !', {
         description: 'Vous êtes maintenant connecté.',
       });
 
-      // Redirect based on role or specified URL
-      const redirectUrl = userProfile ? getRedirectUrl(userProfile) : (redirectTo || '/dashboard');
+      // Redirect to dashboard - the auth hook will handle fetching the user profile
+      // and updating the UI accordingly
+      const redirectUrl = redirectTo || '/dashboard';
       router.push(redirectUrl);
       router.refresh();
     } catch (err) {

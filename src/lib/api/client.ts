@@ -2,6 +2,16 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { createBrowserClient } from '@/lib/supabase/client';
 
 /**
+ * Helper to check if error is an AbortError (from Web Locks API or AbortController)
+ */
+function isAbortError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.name === 'AbortError' || error.message.includes('aborted'))
+  );
+}
+
+/**
  * API Client wrapper around axios for communicating with the backend
  * Automatically handles Supabase token injection and error handling
  */
@@ -36,6 +46,10 @@ class ApiClient {
             config.headers.Authorization = `Bearer ${session.access_token}`;
           }
         } catch (error) {
+          // Ignore AbortError - happens when component unmounts during async operation
+          if (isAbortError(error)) {
+            return config;
+          }
           if (process.env.NODE_ENV === 'development') {
             console.error('[ApiClient] Error getting session:', error);
           }
