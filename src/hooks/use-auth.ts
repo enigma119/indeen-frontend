@@ -12,6 +12,16 @@ const SESSION_REFRESH_INTERVAL = 4 * 60 * 1000;
 const REFRESH_THRESHOLD = 5 * 60;
 
 /**
+ * Helper to check if error is an AbortError (from Web Locks API or AbortController)
+ */
+function isAbortError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error.name === 'AbortError' || error.message.includes('aborted'))
+  );
+}
+
+/**
  * Hook for managing authentication state
  * Initializes auth on mount, listens for auth changes, and provides auth methods
  */
@@ -33,9 +43,11 @@ export function useAuth() {
   const supabase = useMemo(() => createBrowserClient(), []);
   const isConfigured = isSupabaseConfigured();
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isMountedRef = useRef(true);
 
   /**
    * Fetch user profile from backend
+   * Falls back to basic user info from Supabase session if backend is unavailable
    */
   const fetchUserProfile = useCallback(async (userId: string): Promise<User | null> => {
     try {
@@ -43,22 +55,50 @@ export function useAuth() {
       const profile = await apiClient.get<User>('/auth/me');
       return profile;
     } catch (error: any) {
-      // If user doesn't exist in database, the trigger should have created them
-      // If 404, it means the user wasn't created yet (trigger might not have run)
-      // In that case, we just return null - the user can refresh or the trigger will create them
-      if (error?.response?.status === 404) {
+      // Ignore AbortError
+      if (isAbortError(error)) {
+        return null;
+      }
+
+      // If 401 (token rejected) or 404 (user not found), try to create basic user from Supabase
+      if (error?.response?.status === 401 || error?.response?.status === 404) {
         if (process.env.NODE_ENV === 'development') {
-          console.log('[useAuth] User not found in database. The trigger should create them automatically.');
+          console.log('[useAuth] Backend unavailable or rejected token. Using Supabase session data.');
+        }
+
+        // Try to get basic user info from Supabase session
+        try {
+          if (!supabase) return null;
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            const supabaseUser = session.user;
+            // Create a basic user object from Supabase metadata
+            const basicUser: User = {
+              id: supabaseUser.id,
+              email: supabaseUser.email || '',
+              role: (supabaseUser.user_metadata?.role as User['role']) || 'MENTEE',
+              first_name: supabaseUser.user_metadata?.first_name || supabaseUser.email?.split('@')[0] || 'Utilisateur',
+              last_name: supabaseUser.user_metadata?.last_name || '',
+              avatar_url: supabaseUser.user_metadata?.avatar_url,
+              country_code: supabaseUser.user_metadata?.country_code || 'FR',
+              created_at: supabaseUser.created_at,
+            };
+            return basicUser;
+          }
+        } catch (sessionError) {
+          if (process.env.NODE_ENV === 'development') {
+            console.error('[useAuth] Error getting Supabase session:', sessionError);
+          }
         }
         return null;
       }
-      
+
       if (process.env.NODE_ENV === 'development') {
         console.error('[useAuth] Error fetching user profile:', error);
       }
       return null;
     }
-  }, []);
+  }, [supabase]);
 
   /**
    * Check and refresh session if needed
@@ -95,6 +135,10 @@ export function useAuth() {
         }
       }
     } catch (error) {
+      // Ignore AbortError - happens when component unmounts during async operation
+      if (isAbortError(error)) {
+        return;
+      }
       if (process.env.NODE_ENV === 'development') {
         console.error('[useAuth] Error checking session:', error);
       }
@@ -119,6 +163,10 @@ export function useAuth() {
       const { data: { session }, error } = await supabase.auth.getSession();
 
       if (error) {
+        // Ignore AbortError
+        if (isAbortError(error)) {
+          return;
+        }
         if (process.env.NODE_ENV === 'development') {
           console.error('[useAuth] Error getting session:', error);
         }
@@ -131,6 +179,10 @@ export function useAuth() {
         setUser(null);
       }
     } catch (error) {
+      // Ignore AbortError - happens when component unmounts during async operation
+      if (isAbortError(error)) {
+        return;
+      }
       if (process.env.NODE_ENV === 'development') {
         console.error('[useAuth] Error initializing auth:', error);
       }
@@ -194,9 +246,15 @@ export function useAuth() {
 
   // Initialize auth on mount
   useEffect(() => {
+    isMountedRef.current = true;
+
     if (!isInitialized) {
       initializeAuth();
     }
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [isInitialized, initializeAuth]);
 
   // Set up periodic session refresh
