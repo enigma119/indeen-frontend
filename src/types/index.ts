@@ -257,3 +257,57 @@ export interface DurationOption {
   price: number;
   recommended?: boolean;
 }
+
+// ============================================
+// DAILY VIDEO CALL TYPES
+// ============================================
+
+export interface DailyParticipant {
+  user_id: string;
+  user_name: string;
+  audio: boolean;
+  video: boolean;
+  screen: boolean;
+  local: boolean;
+  session_id?: string;
+  joined_at?: Date;
+}
+
+export type DailyCallState =
+  | 'idle'
+  | 'joining'
+  | 'joined'
+  | 'left'
+  | 'error';
+
+export interface DailyError {
+  type: 'permissions' | 'network' | 'room-expired' | 'not-allowed' | 'unknown';
+  message: string;
+  details?: string;
+}
+
+export interface DailyDevices {
+  audioInputs: MediaDeviceInfo[];
+  audioOutputs: MediaDeviceInfo[];
+  videoInputs: MediaDeviceInfo[];
+  selectedAudioInput?: string;
+  selectedAudioOutput?: string;
+  selectedVideoInput?: string;
+}
+
+export interface DailyCallConfig {
+  roomUrl: string;
+  token?: string;
+  userName: string;
+  startAudioOff?: boolean;
+  startVideoOff?: boolean;
+}
+
+export interface MeetingMessage {
+  id: string;
+  sender_id: string;
+  sender_name: string;
+  content: string;
+  timestamp: Date;
+  is_local: boolean;
+}
