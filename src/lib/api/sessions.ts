@@ -113,3 +113,81 @@ export async function getUpcomingSessionsCount(): Promise<number> {
   const result = await apiClient.get<{ count: number }>('/sessions/me/upcoming-count');
   return result.count;
 }
+
+// =====================
+// Checkout / Payment
+// =====================
+
+export interface CheckoutSessionResponse {
+  checkoutUrl: string;
+  sessionId: string;
+  stripeSessionId: string;
+}
+
+export interface CheckoutRequest extends BookingRequest {
+  successUrl?: string;
+  cancelUrl?: string;
+}
+
+/**
+ * Create a Stripe checkout session for a booking
+ * @param booking - The booking request with optional redirect URLs
+ */
+export async function createCheckoutSession(
+  booking: CheckoutRequest
+): Promise<CheckoutSessionResponse> {
+  // Set default URLs if not provided
+  const successUrl =
+    booking.successUrl ||
+    `${window.location.origin}/sessions/payment-success`;
+  const cancelUrl =
+    booking.cancelUrl ||
+    `${window.location.origin}/sessions/payment-cancelled`;
+
+  return apiClient.post<CheckoutSessionResponse>('/sessions/create-checkout', {
+    ...booking,
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+  });
+}
+
+/**
+ * Confirm payment after Stripe redirect
+ * @param stripeSessionId - The Stripe checkout session ID
+ */
+export async function confirmPayment(
+  stripeSessionId: string
+): Promise<Session> {
+  return apiClient.post<Session>('/sessions/confirm-payment', {
+    stripe_session_id: stripeSessionId,
+  });
+}
+
+/**
+ * Check if a slot is still available (revalidation before payment)
+ * @param mentorId - The mentor's profile ID
+ * @param date - The slot date
+ * @param startTime - The slot start time
+ * @param duration - Session duration
+ */
+export async function checkSlotAvailability(
+  mentorId: string,
+  date: string,
+  startTime: string,
+  duration: number
+): Promise<{ available: boolean; reason?: string }> {
+  return apiClient.get<{ available: boolean; reason?: string }>(
+    `/mentors/${mentorId}/check-slot`,
+    {
+      params: { date, start_time: startTime, duration },
+    }
+  );
+}
+
+/**
+ * Create a free session (when free trial is applied)
+ * @param booking - The booking request
+ */
+export async function createFreeSession(booking: BookingRequest): Promise<Session> {
+  return apiClient.post<Session>('/sessions/create-free', booking);
+}
