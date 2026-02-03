@@ -198,11 +198,20 @@ export interface Session {
   scheduled_end_at: string;
   duration: number; // in minutes
   status: SessionStatus;
+  mentor_confirmed: boolean;
   timezone: string;
   meeting_url?: string;
   lesson_plan?: string;
+  mentor_notes?: string;
+  topics_covered?: string[];
   cancellation_reason?: string;
   cancelled_at?: string;
+  cancelled_by?: 'mentor' | 'mentee';
+  confirmed_at?: string;
+  completed_at?: string;
+  price?: number;
+  currency?: string;
+  has_review?: boolean;
   created_at: string;
   updated_at: string;
   // Populated relations

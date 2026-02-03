@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,6 +27,7 @@ export default function MentorStep3Page() {
   const router = useRouter();
   const { data, updateData } = useMentorOnboardingStore();
   const [allLevelsSelected, setAllLevelsSelected] = useState(false);
+  const previousDataRef = useRef<string>('');
 
   const {
     register,
@@ -52,24 +53,69 @@ export default function MentorStep3Page() {
     },
   });
 
-  const watchedFields = watch();
+  // Watch specific fields instead of all
+  const languages = watch('languages');
+  const nativeLanguage = watch('nativeLanguage');
+  const specialties = watch('specialties');
+  const teachesChildren = watch('teachesChildren');
+  const teachesTeenagers = watch('teachesTeenagers');
+  const teachesAdults = watch('teachesAdults');
+  const beginnerFriendly = watch('beginnerFriendly');
+  const patientWithSlowLearners = watch('patientWithSlowLearners');
+  const experiencedWithNewMuslims = watch('experiencedWithNewMuslims');
+  const specialNeedsSupport = watch('specialNeedsSupport');
+  const acceptedLevels = watch('acceptedLevels');
 
-  // Auto-save to store on change
+  // Memoized watched fields object
+  const watchedFields: MentorStep3BaseData = {
+    languages: languages || [],
+    nativeLanguage,
+    specialties: specialties || [],
+    teachesChildren: teachesChildren || false,
+    teachesTeenagers: teachesTeenagers || false,
+    teachesAdults: teachesAdults || false,
+    beginnerFriendly: beginnerFriendly || false,
+    patientWithSlowLearners: patientWithSlowLearners || false,
+    experiencedWithNewMuslims: experiencedWithNewMuslims || false,
+    specialNeedsSupport: specialNeedsSupport || false,
+    acceptedLevels: acceptedLevels || [],
+  };
+
+  // Auto-save to store on change (with deduplication)
   useEffect(() => {
+    const serialized = JSON.stringify(watchedFields);
+    if (serialized === previousDataRef.current) {
+      return; // No actual change
+    }
+
     const timeout = setTimeout(() => {
+      previousDataRef.current = serialized;
       updateData(watchedFields);
     }, 300);
     return () => clearTimeout(timeout);
-  }, [watchedFields, updateData]);
+  }, [
+    languages,
+    nativeLanguage,
+    specialties,
+    teachesChildren,
+    teachesTeenagers,
+    teachesAdults,
+    beginnerFriendly,
+    patientWithSlowLearners,
+    experiencedWithNewMuslims,
+    specialNeedsSupport,
+    acceptedLevels,
+    updateData,
+  ]);
 
   // Check if all levels are selected
   useEffect(() => {
     const allLevels = LEARNING_LEVELS.map((l) => l.value);
-    const selectedLevels = watchedFields.acceptedLevels || [];
+    const selectedLevels = acceptedLevels || [];
     setAllLevelsSelected(
       allLevels.length > 0 && allLevels.every((level) => selectedLevels.includes(level))
     );
-  }, [watchedFields.acceptedLevels]);
+  }, [acceptedLevels]);
 
   const onSubmit = (formData: MentorStep3BaseData) => {
     updateData(formData);
@@ -81,7 +127,7 @@ export default function MentorStep3Page() {
   };
 
   const toggleLanguage = (language: Language) => {
-    const current = watchedFields.languages || [];
+    const current = languages || [];
     const updated = current.includes(language)
       ? current.filter((l) => l !== language)
       : [...current, language];
@@ -89,7 +135,7 @@ export default function MentorStep3Page() {
   };
 
   const toggleSpecialty = (specialty: Specialty) => {
-    const current = watchedFields.specialties || [];
+    const current = specialties || [];
     if (current.length >= 5 && !current.includes(specialty)) {
       return; // Max 5 specialties
     }
@@ -100,7 +146,7 @@ export default function MentorStep3Page() {
   };
 
   const toggleLevel = (level: LearningLevel) => {
-    const current = watchedFields.acceptedLevels || [];
+    const current = acceptedLevels || [];
     const updated = current.includes(level)
       ? current.filter((l) => l !== level)
       : [...current, level];
@@ -116,13 +162,13 @@ export default function MentorStep3Page() {
     }
   };
 
-  const selectedLanguages = watchedFields.languages || [];
-  const selectedSpecialties = watchedFields.specialties || [];
-  const selectedLevels = watchedFields.acceptedLevels || [];
+  const selectedLanguages = languages || [];
+  const selectedSpecialties = specialties || [];
+  const selectedLevels = acceptedLevels || [];
   const hasAtLeastOneStudentType =
-    watchedFields.teachesChildren ||
-    watchedFields.teachesTeenagers ||
-    watchedFields.teachesAdults;
+    teachesChildren ||
+    teachesTeenagers ||
+    teachesAdults;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -165,7 +211,7 @@ export default function MentorStep3Page() {
             <div className="space-y-2 mt-4">
               <Label htmlFor="nativeLanguage">Langue maternelle (optionnel)</Label>
               <Select
-                value={watchedFields.nativeLanguage}
+                value={nativeLanguage || ''}
                 onValueChange={(value) => setValue('nativeLanguage', value as Language, { shouldValidate: true })}
               >
                 <SelectTrigger id="nativeLanguage">
@@ -226,14 +272,14 @@ export default function MentorStep3Page() {
               <div
                 className={cn(
                   'flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-all',
-                  watchedFields.teachesChildren
+                  teachesChildren
                     ? 'border-teal-500 bg-teal-50'
                     : 'border-gray-200 hover:border-gray-300'
                 )}
-                onClick={() => setValue('teachesChildren', !watchedFields.teachesChildren, { shouldValidate: true })}
+                onClick={() => setValue('teachesChildren', !teachesChildren, { shouldValidate: true })}
               >
                 <Checkbox
-                  checked={watchedFields.teachesChildren}
+                  checked={teachesChildren}
                   onCheckedChange={(checked) =>
                     setValue('teachesChildren', checked === true, { shouldValidate: true })
                   }
@@ -254,14 +300,14 @@ export default function MentorStep3Page() {
               <div
                 className={cn(
                   'flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-all',
-                  watchedFields.teachesTeenagers
+                  teachesTeenagers
                     ? 'border-teal-500 bg-teal-50'
                     : 'border-gray-200 hover:border-gray-300'
                 )}
-                onClick={() => setValue('teachesTeenagers', !watchedFields.teachesTeenagers, { shouldValidate: true })}
+                onClick={() => setValue('teachesTeenagers', !teachesTeenagers, { shouldValidate: true })}
               >
                 <Checkbox
-                  checked={watchedFields.teachesTeenagers}
+                  checked={teachesTeenagers}
                   onCheckedChange={(checked) =>
                     setValue('teachesTeenagers', checked === true, { shouldValidate: true })
                   }
@@ -282,14 +328,14 @@ export default function MentorStep3Page() {
               <div
                 className={cn(
                   'flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-all',
-                  watchedFields.teachesAdults
+                  teachesAdults
                     ? 'border-teal-500 bg-teal-50'
                     : 'border-gray-200 hover:border-gray-300'
                 )}
-                onClick={() => setValue('teachesAdults', !watchedFields.teachesAdults, { shouldValidate: true })}
+                onClick={() => setValue('teachesAdults', !teachesAdults, { shouldValidate: true })}
               >
                 <Checkbox
-                  checked={watchedFields.teachesAdults}
+                  checked={teachesAdults}
                   onCheckedChange={(checked) =>
                     setValue('teachesAdults', checked === true, { shouldValidate: true })
                   }
@@ -319,7 +365,7 @@ export default function MentorStep3Page() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="beginnerFriendly"
-                  checked={watchedFields.beginnerFriendly}
+                  checked={beginnerFriendly}
                   onCheckedChange={(checked) =>
                     setValue('beginnerFriendly', checked === true)
                   }
@@ -331,7 +377,7 @@ export default function MentorStep3Page() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="patientWithSlowLearners"
-                  checked={watchedFields.patientWithSlowLearners}
+                  checked={patientWithSlowLearners}
                   onCheckedChange={(checked) =>
                     setValue('patientWithSlowLearners', checked === true)
                   }
@@ -343,7 +389,7 @@ export default function MentorStep3Page() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="experiencedWithNewMuslims"
-                  checked={watchedFields.experiencedWithNewMuslims}
+                  checked={experiencedWithNewMuslims}
                   onCheckedChange={(checked) =>
                     setValue('experiencedWithNewMuslims', checked === true)
                   }
@@ -355,7 +401,7 @@ export default function MentorStep3Page() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="specialNeedsSupport"
-                  checked={watchedFields.specialNeedsSupport}
+                  checked={specialNeedsSupport}
                   onCheckedChange={(checked) =>
                     setValue('specialNeedsSupport', checked === true)
                   }

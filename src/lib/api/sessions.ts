@@ -113,3 +113,123 @@ export async function getUpcomingSessionsCount(): Promise<number> {
   const result = await apiClient.get<{ count: number }>('/sessions/me/upcoming-count');
   return result.count;
 }
+
+// =====================
+// Checkout / Payment
+// =====================
+
+export interface CheckoutSessionResponse {
+  checkoutUrl: string;
+  sessionId: string;
+  stripeSessionId: string;
+}
+
+export interface CheckoutRequest extends BookingRequest {
+  successUrl?: string;
+  cancelUrl?: string;
+}
+
+/**
+ * Create a Stripe checkout session for a booking
+ * @param booking - The booking request with optional redirect URLs
+ */
+export async function createCheckoutSession(
+  booking: CheckoutRequest
+): Promise<CheckoutSessionResponse> {
+  // Set default URLs if not provided
+  const successUrl =
+    booking.successUrl ||
+    `${window.location.origin}/sessions/payment-success`;
+  const cancelUrl =
+    booking.cancelUrl ||
+    `${window.location.origin}/sessions/payment-cancelled`;
+
+  return apiClient.post<CheckoutSessionResponse>('/sessions/create-checkout', {
+    ...booking,
+    success_url: successUrl,
+    cancel_url: cancelUrl,
+  });
+}
+
+/**
+ * Confirm payment after Stripe redirect
+ * @param stripeSessionId - The Stripe checkout session ID
+ */
+export async function confirmPayment(
+  stripeSessionId: string
+): Promise<Session> {
+  return apiClient.post<Session>('/sessions/confirm-payment', {
+    stripe_session_id: stripeSessionId,
+  });
+}
+
+/**
+ * Check if a slot is still available (revalidation before payment)
+ * @param mentorId - The mentor's profile ID
+ * @param date - The slot date
+ * @param startTime - The slot start time
+ * @param duration - Session duration
+ */
+export async function checkSlotAvailability(
+  mentorId: string,
+  date: string,
+  startTime: string,
+  duration: number
+): Promise<{ available: boolean; reason?: string }> {
+  return apiClient.get<{ available: boolean; reason?: string }>(
+    `/mentors/${mentorId}/check-slot`,
+    {
+      params: { date, start_time: startTime, duration },
+    }
+  );
+}
+
+/**
+ * Create a free session (when free trial is applied)
+ * @param booking - The booking request
+ */
+export async function createFreeSession(booking: BookingRequest): Promise<Session> {
+  return apiClient.post<Session>('/sessions/create-free', booking);
+}
+
+// =====================
+// Mentor Actions
+// =====================
+
+/**
+ * Confirm a session (mentor action)
+ * @param sessionId - The session ID
+ */
+export async function confirmSession(sessionId: string): Promise<Session> {
+  return apiClient.patch<Session>(`/sessions/${sessionId}/confirm`);
+}
+
+/**
+ * Reject a session (mentor action)
+ * @param sessionId - The session ID
+ * @param reason - Rejection reason
+ */
+export async function rejectSession(
+  sessionId: string,
+  reason: string
+): Promise<Session> {
+  return apiClient.patch<Session>(`/sessions/${sessionId}/reject`, { reason });
+}
+
+/**
+ * Get mentor's teaching sessions
+ * @param status - Filter by status
+ * @param page - Page number
+ * @param limit - Items per page
+ */
+export async function getMyTeachingSessions(
+  status?: 'pending' | 'upcoming' | 'past' | 'cancelled',
+  page: number = 1,
+  limit: number = 10
+): Promise<SessionsResult> {
+  const params: Record<string, string | number> = { page, limit };
+  if (status) {
+    params.status = status;
+  }
+  return apiClient.get<SessionsResult>('/sessions/teaching', { params });
+}
