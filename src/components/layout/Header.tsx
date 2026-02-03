@@ -62,9 +62,9 @@ export function Header() {
             {isAuthenticated && user ? (
               <UserMenu
                 user={{
-                  name: `${user.first_name} ${user.last_name}`,
+                  name: `${user.firstName} ${user.lastName}`,
                   email: user.email,
-                  avatar_url: user.avatar_url,
+                  avatarUrl: user.avatarUrl,
                 }}
               />
             ) : (

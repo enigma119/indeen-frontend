@@ -77,11 +77,11 @@ export function useAuth() {
               id: supabaseUser.id,
               email: supabaseUser.email || '',
               role: (supabaseUser.user_metadata?.role as User['role']) || 'MENTEE',
-              first_name: supabaseUser.user_metadata?.first_name || supabaseUser.email?.split('@')[0] || 'Utilisateur',
-              last_name: supabaseUser.user_metadata?.last_name || '',
-              avatar_url: supabaseUser.user_metadata?.avatar_url,
-              country_code: supabaseUser.user_metadata?.country_code || 'FR',
-              created_at: supabaseUser.created_at,
+              firstName: supabaseUser.user_metadata?.firstName || supabaseUser.user_metadata?.firstName || supabaseUser.email?.split('@')[0] || 'Utilisateur',
+              lastName: supabaseUser.user_metadata?.lastName || supabaseUser.user_metadata?.lastName || '',
+              avatarUrl: supabaseUser.user_metadata?.avatarUrl || supabaseUser.user_metadata?.avatarUrl,
+              countryCode: supabaseUser.user_metadata?.countryCode || supabaseUser.user_metadata?.country_code || 'FR',
+              createdAt: supabaseUser.created_at,
             };
             return basicUser;
           }

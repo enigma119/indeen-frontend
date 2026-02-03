@@ -10,8 +10,8 @@ interface AboutSectionProps {
 }
 
 export function AboutSection({ mentor }: AboutSectionProps) {
-  const memberSince = mentor.created_at
-    ? formatDistanceToNow(new Date(mentor.created_at), {
+  const memberSince = mentor.createdAt
+    ? formatDistanceToNow(new Date(mentor.createdAt), {
         addSuffix: false,
         locale: fr,
       })
@@ -21,19 +21,19 @@ export function AboutSection({ mentor }: AboutSectionProps) {
     {
       icon: Clock,
       label: "Années d'expérience",
-      value: mentor.years_of_experience || 0,
-      suffix: mentor.years_of_experience === 1 ? 'an' : 'ans',
+      value: mentor.yearsOfExperience || 0,
+      suffix: mentor.yearsOfExperience === 1 ? 'an' : 'ans',
     },
     {
       icon: BookOpen,
       label: 'Sessions données',
-      value: mentor.total_sessions || 0,
+      value: mentor.totalSessions || 0,
       suffix: '',
     },
     {
       icon: Users,
       label: 'Élèves formés',
-      value: mentor.total_students || 0,
+      value: mentor.totalStudents || 0,
       suffix: '',
     },
   ];

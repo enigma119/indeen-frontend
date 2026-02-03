@@ -29,7 +29,7 @@ function CertificationCard({ certification }: { certification: Certification }) 
               )}
               {certification.year && <span>{certification.year}</span>}
             </div>
-            {certification.document_url && (
+            {certification.documentUrl && (
               <Button
                 variant="link"
                 size="sm"
@@ -37,7 +37,7 @@ function CertificationCard({ certification }: { certification: Certification }) 
                 className="h-auto p-0 mt-2 text-teal-600"
               >
                 <a
-                  href={certification.document_url}
+                  href={certification.documentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -56,7 +56,7 @@ function CertificationCard({ certification }: { certification: Certification }) 
 export function QualificationsSection({ mentor }: QualificationsSectionProps) {
   const hasCertifications =
     mentor.certifications && mentor.certifications.length > 0;
-  const hasAcademicBackground = mentor.academic_background;
+  const hasAcademicBackground = mentor.academicBackground;
 
   if (!hasCertifications && !hasAcademicBackground) {
     return null;
@@ -89,7 +89,7 @@ export function QualificationsSection({ mentor }: QualificationsSectionProps) {
             <h3 className="font-medium text-gray-900">Formation académique</h3>
           </div>
           <div className="prose prose-gray max-w-none">
-            {mentor.academic_background!.split('\n').map((paragraph, index) => (
+            {mentor.academicBackground!.split('\n').map((paragraph, index) => (
               <p key={index} className="text-gray-700 mb-2 last:mb-0">
                 {paragraph}
               </p>

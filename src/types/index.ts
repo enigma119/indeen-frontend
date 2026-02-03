@@ -2,48 +2,66 @@ export interface User {
   id: string;
   email: string;
   role: 'MENTOR' | 'MENTEE' | 'ADMIN' | 'PARENT';
-  first_name: string;
-  last_name: string;
-  avatar_url?: string;
-  country_code: string;
-  created_at: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  phone?: string;
+  gender?: string;
+  countryCode: string;
+  timezone?: string;
+  locale?: string;
+  preferredCurrency?: string;
+  emailVerified?: boolean;
+  isActive?: boolean;
+  createdAt: string;
+  // Populated profiles
+  mentorProfile?: MentorProfile;
+  menteeProfile?: MenteeProfile;
 }
 
 export interface MentorProfile {
   id: string;
-  user_id: string;
+  userId: string;
   slug: string;
   bio: string;
   headline: string;
   languages: string[];
-  native_language?: string;
+  nativeLanguage?: string;
   specialties: string[];
-  hourly_rate: number;
+  hourlyRate: number;
   currency: string;
-  average_rating: number;
-  total_reviews: number;
-  is_active: boolean;
+  averageRating: number;
+  totalReviews: number;
+  isActive: boolean;
+  isAcceptingStudents?: boolean;
   // Profile details
-  verification_status?: 'PENDING' | 'APPROVED' | 'REJECTED';
-  years_of_experience?: number;
-  total_sessions?: number;
-  total_students?: number;
-  average_response_time?: number; // in minutes
-  free_trial_available?: boolean;
+  verificationStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  yearsOfExperience?: number;
+  totalSessions?: number;
+  totalStudents?: number;
+  completedSessions?: number;
+  averageResponseTime?: number; // in minutes
+  freeTrialAvailable?: boolean;
+  freeTrialDuration?: number;
   // Teaching capabilities
-  teaches_children?: boolean;
-  teaches_teenagers?: boolean;
-  teaches_adults?: boolean;
-  beginner_friendly?: boolean;
-  patient_with_slow_learners?: boolean;
-  experienced_with_new_muslims?: boolean;
-  accepted_levels?: string[];
+  teachesChildren?: boolean;
+  teachesTeenagers?: boolean;
+  teachesAdults?: boolean;
+  beginnerFriendly?: boolean;
+  patientWithSlowLearners?: boolean;
+  experiencedWithNewMuslims?: boolean;
+  acceptedLevels?: string[];
+  // Session settings
+  minSessionDuration?: number;
+  maxSessionDuration?: number;
+  maxStudentsPerWeek?: number;
   // Academic info
-  academic_background?: string;
+  academicBackground?: string;
   certifications?: Certification[];
+  videoIntroUrl?: string;
   // User info (populated from join)
   user?: User;
-  created_at?: string;
+  createdAt?: string;
 }
 
 export interface Certification {
@@ -52,15 +70,79 @@ export interface Certification {
   name: string;
   institution?: string;
   year?: number;
-  document_url?: string;
+  documentUrl?: string;
 }
 
 export interface MenteeProfile {
   id: string;
-  user_id: string;
-  learner_category: 'CHILD' | 'TEENAGER' | 'ADULT';
-  current_level: string;
-  learning_goals: string[];
+  userId: string;
+  learnerCategory: 'CHILD' | 'TEENAGER' | 'ADULT';
+  currentLevel: string;
+  learningGoals: string[];
+  preferredLanguages?: string[];
+  learningPace?: 'SLOW' | 'MODERATE' | 'FAST';
+  preferredSessionDuration?: number;
+  specialNeeds?: string;
+  totalSessions?: number;
+  completedSessions?: number;
+  totalHoursLearned?: number;
+  user?: User;
+  createdAt?: string;
+}
+
+// ============================================
+// PROFILE UPDATE TYPES
+// ============================================
+
+export interface UpdateUserProfile {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  gender?: string;
+  countryCode?: string;
+  timezone?: string;
+  locale?: string;
+  preferredCurrency?: string;
+  avatarUrl?: string;
+}
+
+export interface UpdateMentorProfile {
+  bio?: string;
+  headline?: string;
+  languages?: string[];
+  nativeLanguage?: string;
+  specialties?: string[];
+  hourlyRate?: number;
+  currency?: string;
+  teachesChildren?: boolean;
+  teachesTeenagers?: boolean;
+  teachesAdults?: boolean;
+  beginnerFriendly?: boolean;
+  patientWithSlowLearners?: boolean;
+  experiencedWithNewMuslims?: boolean;
+  acceptedLevels?: string[];
+  minSessionDuration?: number;
+  maxSessionDuration?: number;
+  maxStudentsPerWeek?: number;
+  freeTrialAvailable?: boolean;
+  freeTrialDuration?: number;
+  isAcceptingStudents?: boolean;
+  videoIntroUrl?: string;
+}
+
+export interface UpdateMenteeProfile {
+  learnerCategory?: 'CHILD' | 'TEENAGER' | 'ADULT';
+  currentLevel?: string;
+  learningGoals?: string[];
+  preferredLanguages?: string[];
+  learningPace?: 'SLOW' | 'MODERATE' | 'FAST';
+  preferredSessionDuration?: number;
+  specialNeeds?: string;
+}
+
+export interface UserWithProfile extends User {
+  mentorProfile?: MentorProfile;
+  menteeProfile?: MenteeProfile;
 }
 
 // Auth types
@@ -139,17 +221,17 @@ export interface AvailabilitySlot {
 
 export interface Review {
   id: string;
-  mentor_id: string;
-  mentee_id: string;
+  mentorId: string;
+  menteeId: string;
   rating: number;
   comment: string;
-  created_at: string;
-  mentor_response?: string;
-  mentor_response_at?: string;
+  createdAt: string;
+  mentorResponse?: string;
+  mentorResponseAt?: string;
   mentee?: {
-    first_name: string;
-    last_name: string;
-    avatar_url?: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string;
   };
 }
 
@@ -256,4 +338,58 @@ export interface DurationOption {
   label: string;
   price: number;
   recommended?: boolean;
+}
+
+// ============================================
+// DAILY VIDEO CALL TYPES
+// ============================================
+
+export interface DailyParticipant {
+  user_id: string;
+  user_name: string;
+  audio: boolean;
+  video: boolean;
+  screen: boolean;
+  local: boolean;
+  session_id?: string;
+  joined_at?: Date;
+}
+
+export type DailyCallState =
+  | 'idle'
+  | 'joining'
+  | 'joined'
+  | 'left'
+  | 'error';
+
+export interface DailyError {
+  type: 'permissions' | 'network' | 'room-expired' | 'not-allowed' | 'unknown';
+  message: string;
+  details?: string;
+}
+
+export interface DailyDevices {
+  audioInputs: MediaDeviceInfo[];
+  audioOutputs: MediaDeviceInfo[];
+  videoInputs: MediaDeviceInfo[];
+  selectedAudioInput?: string;
+  selectedAudioOutput?: string;
+  selectedVideoInput?: string;
+}
+
+export interface DailyCallConfig {
+  roomUrl: string;
+  token?: string;
+  userName: string;
+  startAudioOff?: boolean;
+  startVideoOff?: boolean;
+}
+
+export interface MeetingMessage {
+  id: string;
+  sender_id: string;
+  sender_name: string;
+  content: string;
+  timestamp: Date;
+  is_local: boolean;
 }

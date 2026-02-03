@@ -157,33 +157,33 @@ export default function SessionDetailPage() {
   const scheduledDate = new Date(session.scheduled_at);
 
   // Determine if user is mentor or mentee for this session
-  const isSessionMentor = user?.id === session.mentor_profile?.user_id;
+  const isSessionMentor = user?.id === session.mentor_profile?.userId;
   const isSessionMentee = !isSessionMentor;
 
   // Get the other participant's info
   const otherParticipant = isSessionMentor
     ? {
         name: session.mentee_profile?.user
-          ? `${session.mentee_profile.user.first_name} ${session.mentee_profile.user.last_name}`
+          ? `${session.mentee_profile.user.firstName} ${session.mentee_profile.user.lastName}`
           : 'Élève',
-        avatar: session.mentee_profile?.user?.avatar_url,
+        avatar: session.mentee_profile?.user?.avatarUrl,
         initials: session.mentee_profile?.user
-          ? `${session.mentee_profile.user.first_name[0]}${session.mentee_profile.user.last_name[0]}`
+          ? `${session.mentee_profile.user.firstName[0]}${session.mentee_profile.user.lastName[0]}`
           : 'E',
         role: 'Élève',
-        level: session.mentee_profile?.current_level,
-        goals: session.mentee_profile?.learning_goals,
+        level: session.mentee_profile?.currentLevel,
+        goals: session.mentee_profile?.learningGoals,
       }
     : {
         name: session.mentor_profile?.user
-          ? `${session.mentor_profile.user.first_name} ${session.mentor_profile.user.last_name}`
+          ? `${session.mentor_profile.user.firstName} ${session.mentor_profile.user.lastName}`
           : 'Mentor',
-        avatar: session.mentor_profile?.user?.avatar_url,
+        avatar: session.mentor_profile?.user?.avatarUrl,
         initials: session.mentor_profile?.user
-          ? `${session.mentor_profile.user.first_name[0]}${session.mentor_profile.user.last_name[0]}`
+          ? `${session.mentor_profile.user.firstName[0]}${session.mentor_profile.user.lastName[0]}`
           : 'M',
         role: 'Mentor',
-        rating: session.mentor_profile?.average_rating,
+        rating: session.mentor_profile?.averageRating,
         headline: session.mentor_profile?.headline,
         slug: session.mentor_profile?.slug,
       };

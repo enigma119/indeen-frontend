@@ -30,14 +30,14 @@ export function ComparisonBadge() {
           <div className="flex items-center -space-x-2">
             {mentors.map((mentor) => {
               const initials = mentor.user
-                ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+                ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
                 : 'M';
               return (
                 <div key={mentor.id} className="relative group">
                   <Avatar className="h-10 w-10 border-2 border-white">
                     <AvatarImage
-                      src={mentor.user?.avatar_url}
-                      alt={mentor.user?.first_name}
+                      src={mentor.user?.avatarUrl}
+                      alt={mentor.user?.firstName}
                     />
                     <AvatarFallback className="bg-teal-100 text-teal-700 text-sm">
                       {initials}

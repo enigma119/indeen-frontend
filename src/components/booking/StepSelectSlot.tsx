@@ -30,7 +30,7 @@ export function StepSelectSlot() {
     );
   }
 
-  const durationOptions = getDurationOptions(mentor.hourly_rate, mentor.currency);
+  const durationOptions = getDurationOptions(mentor.hourlyRate, mentor.currency);
 
   return (
     <div className="space-y-8">

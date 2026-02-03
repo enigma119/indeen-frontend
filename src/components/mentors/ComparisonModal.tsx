@@ -73,10 +73,10 @@ const formatResponseTime = (minutes?: number) => {
 // Render cell content based on criteria
 function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: CriteriaKey }) {
   const initials = mentor.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
   const fullName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
 
   switch (criteria) {
@@ -84,7 +84,7 @@ function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: Cr
       return (
         <div className="flex flex-col items-center gap-2">
           <Avatar className="h-16 w-16 border-2 border-gray-100">
-            <AvatarImage src={mentor.user?.avatar_url} alt={fullName} />
+            <AvatarImage src={mentor.user?.avatarUrl} alt={fullName} />
             <AvatarFallback className="bg-teal-100 text-teal-700">
               {initials}
             </AvatarFallback>
@@ -99,21 +99,21 @@ function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: Cr
       return (
         <div className="flex items-center gap-1">
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-          <span className="font-semibold">{mentor.average_rating.toFixed(1)}</span>
+          <span className="font-semibold">{mentor.averageRating.toFixed(1)}</span>
         </div>
       );
 
     case 'price':
       return (
         <span className="font-semibold text-teal-600">
-          {formatCurrency(mentor.hourly_rate, mentor.currency)}/h
+          {formatCurrency(mentor.hourlyRate, mentor.currency)}/h
         </span>
       );
 
     case 'experience':
       return (
         <span>
-          {mentor.years_of_experience || 0} an{(mentor.years_of_experience || 0) > 1 ? 's' : ''}
+          {mentor.yearsOfExperience || 0} an{(mentor.yearsOfExperience || 0) > 1 ? 's' : ''}
         </span>
       );
 
@@ -150,39 +150,39 @@ function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: Cr
       );
 
     case 'reviews':
-      return <span>{mentor.total_reviews} avis</span>;
+      return <span>{mentor.totalReviews} avis</span>;
 
     case 'response':
       return (
         <div className="flex items-center gap-1">
           <Clock className="h-3 w-3 text-gray-400" />
-          <span>{formatResponseTime(mentor.average_response_time)}</span>
+          <span>{formatResponseTime(mentor.averageResponseTime)}</span>
         </div>
       );
 
     case 'trial':
-      return mentor.free_trial_available ? (
+      return mentor.freeTrialAvailable ? (
         <Check className="h-5 w-5 text-green-600" />
       ) : (
         <X className="h-5 w-5 text-gray-300" />
       );
 
     case 'children':
-      return mentor.teaches_children ? (
+      return mentor.teachesChildren ? (
         <Check className="h-5 w-5 text-green-600" />
       ) : (
         <X className="h-5 w-5 text-gray-300" />
       );
 
     case 'teenagers':
-      return mentor.teaches_teenagers ? (
+      return mentor.teachesTeenagers ? (
         <Check className="h-5 w-5 text-green-600" />
       ) : (
         <X className="h-5 w-5 text-gray-300" />
       );
 
     case 'adults':
-      return mentor.teaches_adults ? (
+      return mentor.teachesAdults ? (
         <Check className="h-5 w-5 text-green-600" />
       ) : (
         <X className="h-5 w-5 text-gray-300" />

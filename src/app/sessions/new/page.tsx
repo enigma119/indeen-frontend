@@ -175,7 +175,7 @@ export default function NewSessionPage() {
         <p className="text-gray-600 mb-8">
           avec{' '}
           <span className="font-medium">
-            {mentor.user?.first_name} {mentor.user?.last_name}
+            {mentor.user?.firstName} {mentor.user?.lastName}
           </span>
         </p>
 

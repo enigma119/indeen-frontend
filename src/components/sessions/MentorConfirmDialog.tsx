@@ -44,10 +44,10 @@ export function MentorConfirmDialog({
 
   const mentee = session.mentee_profile;
   const menteeName = mentee?.user
-    ? `${mentee.user.first_name} ${mentee.user.last_name}`
+    ? `${mentee.user.firstName} ${mentee.user.lastName}`
     : 'Élève';
   const initials = mentee?.user
-    ? `${mentee.user.first_name[0]}${mentee.user.last_name[0]}`
+    ? `${mentee.user.firstName[0]}${mentee.user.lastName[0]}`
     : 'E';
 
   const scheduledDate = new Date(session.scheduled_at);
@@ -102,7 +102,7 @@ export function MentorConfirmDialog({
           {/* Session Info */}
           <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={mentee?.user?.avatar_url} alt={menteeName} />
+              <AvatarImage src={mentee?.user?.avatarUrl} alt={menteeName} />
               <AvatarFallback className="bg-blue-100 text-blue-700">
                 {initials}
               </AvatarFallback>
@@ -111,9 +111,9 @@ export function MentorConfirmDialog({
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h4 className="font-semibold">{menteeName}</h4>
-                {mentee?.current_level && (
+                {mentee?.currentLevel && (
                   <Badge variant="outline" className="text-xs">
-                    {mentee.current_level}
+                    {mentee.currentLevel}
                   </Badge>
                 )}
               </div>
@@ -147,14 +147,14 @@ export function MentorConfirmDialog({
           )}
 
           {/* Mentee Goals */}
-          {mentee?.learning_goals && mentee.learning_goals.length > 0 && (
+          {mentee?.learningGoals && mentee.learningGoals.length > 0 && (
             <div className="p-3 border rounded-lg">
               <p className="text-sm font-medium flex items-center gap-1.5 text-gray-700">
                 <User className="h-4 w-4" />
                 Objectifs de l'élève :
               </p>
               <div className="flex flex-wrap gap-1 mt-1">
-                {mentee.learning_goals.map((goal, index) => (
+                {mentee.learningGoals.map((goal, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
                     {goal}
                   </Badge>

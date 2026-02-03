@@ -19,6 +19,13 @@ import {
   getMyTeachingSessions,
   type CheckoutRequest,
 } from '@/lib/api/sessions';
+import {
+  createMeetingRoom,
+  getMeetingRoom,
+  getMeetingToken,
+  completeSession,
+  type CompleteSessionData,
+} from '@/lib/daily/client';
 import type {
   BookingRequest,
   SessionStatus,
@@ -368,5 +375,83 @@ export function useMyTeachingSessions(
     queryKey: ['teaching-sessions', { status, page, limit }],
     queryFn: () => getMyTeachingSessions(status, page, limit),
     staleTime: 2 * 60 * 1000,
+  });
+}
+
+// =====================
+// Meeting Hooks
+// =====================
+
+/**
+ * Hook to create a meeting room for a session
+ */
+export function useCreateMeetingRoom() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (sessionId: string) => createMeetingRoom(sessionId),
+    onSuccess: (data, sessionId) => {
+      // Invalidate session detail to get updated meeting_url
+      queryClient.invalidateQueries({ queryKey: sessionKeys.detail(sessionId) });
+    },
+    onError: (error: Error) => {
+      toast.error('Erreur de création', {
+        description: error.message || 'Impossible de créer la salle de réunion.',
+      });
+    },
+  });
+}
+
+/**
+ * Hook to get meeting room for a session
+ */
+export function useMeetingRoom(sessionId: string | undefined) {
+  return useQuery({
+    queryKey: ['meeting-room', sessionId],
+    queryFn: () => getMeetingRoom(sessionId!),
+    enabled: !!sessionId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
+ * Hook to get meeting token
+ */
+export function useMeetingToken(sessionId: string | undefined) {
+  return useQuery({
+    queryKey: ['meeting-token', sessionId],
+    queryFn: () => getMeetingToken(sessionId!),
+    enabled: !!sessionId,
+    staleTime: 10 * 60 * 1000, // 10 minutes - tokens usually last longer
+  });
+}
+
+/**
+ * Hook to complete a session (mentor)
+ */
+export function useCompleteSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      sessionId,
+      data,
+    }: {
+      sessionId: string;
+      data: CompleteSessionData;
+    }) => completeSession(sessionId, data),
+    onSuccess: (_, { sessionId }) => {
+      queryClient.invalidateQueries({ queryKey: sessionKeys.detail(sessionId) });
+      queryClient.invalidateQueries({ queryKey: sessionKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ['teaching-sessions'] });
+      toast.success('Session terminée !', {
+        description: 'Les notes ont été enregistrées.',
+      });
+    },
+    onError: (error: Error) => {
+      toast.error('Erreur', {
+        description: error.message || 'Impossible de terminer la session.',
+      });
+    },
   });
 }

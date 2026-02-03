@@ -46,7 +46,7 @@ export function MentorCard({
   // Get initials from user
   const getInitials = () => {
     if (mentor.user) {
-      return `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`;
+      return `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`;
     }
     return '??';
   };
@@ -54,7 +54,7 @@ export function MentorCard({
   // Get full name
   const getFullName = () => {
     if (mentor.user) {
-      return `${mentor.user.first_name} ${mentor.user.last_name}`;
+      return `${mentor.user.firstName} ${mentor.user.lastName}`;
     }
     return 'Mentor';
   };
@@ -114,9 +114,9 @@ export function MentorCard({
 
   // Student types
   const studentTypes = [];
-  if (mentor.teaches_children) studentTypes.push('Enfants');
-  if (mentor.teaches_teenagers) studentTypes.push('Ados');
-  if (mentor.teaches_adults) studentTypes.push('Adultes');
+  if (mentor.teachesChildren) studentTypes.push('Enfants');
+  if (mentor.teachesTeenagers) studentTypes.push('Ados');
+  if (mentor.teachesAdults) studentTypes.push('Adultes');
 
   // Profile link - use slug if available, otherwise id
   const profileLink = `/mentors/${mentor.slug || mentor.id}`;
@@ -141,12 +141,12 @@ export function MentorCard({
         <div className="flex items-start gap-4 mb-4">
           <div className="relative">
             <Avatar className="h-16 w-16 border-2 border-white shadow-md">
-              <AvatarImage src={mentor.user?.avatar_url} alt={getFullName()} />
+              <AvatarImage src={mentor.user?.avatarUrl} alt={getFullName()} />
               <AvatarFallback className="bg-teal-100 text-teal-700 text-lg font-semibold">
                 {getInitials()}
               </AvatarFallback>
             </Avatar>
-            {mentor.verification_status === 'APPROVED' && (
+            {mentor.verificationStatus === 'APPROVED' && (
               <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5">
                 <BadgeCheck className="h-5 w-5 text-teal-500" />
               </div>
@@ -160,20 +160,20 @@ export function MentorCard({
 
             {/* Rating */}
             <div className="flex items-center gap-1 mt-1">
-              <div className="flex">{renderStars(mentor.average_rating)}</div>
+              <div className="flex">{renderStars(mentor.averageRating)}</div>
               <span className="text-sm font-medium text-gray-700">
-                {mentor.average_rating.toFixed(1)}
+                {mentor.averageRating.toFixed(1)}
               </span>
               <span className="text-sm text-gray-500">
-                ({mentor.total_reviews} avis)
+                ({mentor.totalReviews} avis)
               </span>
             </div>
 
             {/* Location */}
-            {mentor.user?.country_code && (
+            {mentor.user?.countryCode && (
               <div className="flex items-center gap-1 mt-1 text-sm text-gray-500">
                 <MapPin className="h-3.5 w-3.5" />
-                <span>{getCountryFlag(mentor.user.country_code)}</span>
+                <span>{getCountryFlag(mentor.user.countryCode)}</span>
               </div>
             )}
           </div>
@@ -230,13 +230,13 @@ export function MentorCard({
         <div className="w-full flex items-center justify-between">
           <div>
             <span className="text-lg font-bold text-gray-900">
-              {formatPrice(mentor.hourly_rate, mentor.currency)}
+              {formatPrice(mentor.hourlyRate, mentor.currency)}
             </span>
             <span className="text-sm text-gray-500">/h</span>
           </div>
 
           {/* Free trial badge */}
-          {mentor.free_trial_available && (
+          {mentor.freeTrialAvailable && (
             <Badge
               variant="outline"
               className="border-green-200 bg-green-50 text-green-700"

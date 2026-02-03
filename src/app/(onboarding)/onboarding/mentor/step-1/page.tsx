@@ -37,8 +37,8 @@ export default function MentorStep1Page() {
     resolver: zodResolver(mentorStep1Schema),
     mode: 'onChange',
     defaultValues: {
-      firstName: data.firstName || user?.first_name || '',
-      lastName: data.lastName || user?.last_name || '',
+      firstName: data.firstName || user?.firstName || '',
+      lastName: data.lastName || user?.lastName || '',
       country: data.country || '',
       phone: data.phone || '',
       gender: data.gender,
@@ -60,8 +60,8 @@ export default function MentorStep1Page() {
   // Pre-fill from user data on mount
   useEffect(() => {
     if (user && !data.firstName) {
-      setValue('firstName', user.first_name || '');
-      setValue('lastName', user.last_name || '');
+      setValue('firstName', user.firstName || '');
+      setValue('lastName', user.lastName || '');
     }
   }, [user, data.firstName, setValue]);
 

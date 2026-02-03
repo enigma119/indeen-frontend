@@ -65,11 +65,50 @@ export async function getMySessions(
   page: number = 1,
   limit: number = 10
 ): Promise<SessionsResult> {
+  // For 'upcoming' and 'past', use dedicated endpoints
+  if (status === 'upcoming') {
+    const sessions = await apiClient.get<Session[]>('/sessions/upcoming');
+    return {
+      sessions,
+      total: sessions.length,
+      page: 1,
+      totalPages: 1,
+      hasMore: false,
+    };
+  }
+  if (status === 'past') {
+    const sessions = await apiClient.get<Session[]>('/sessions/past', {
+      params: { limit },
+    });
+    return {
+      sessions,
+      total: sessions.length,
+      page: 1,
+      totalPages: 1,
+      hasMore: false,
+    };
+  }
+
+  // For specific status or all sessions
   const params: Record<string, string | number> = { page, limit };
   if (status) {
     params.status = status;
   }
-  return apiClient.get<SessionsResult>('/sessions/me', { params });
+  const result = await apiClient.get<{
+    data: Session[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  }>('/sessions', { params });
+
+  return {
+    sessions: result.data,
+    total: result.total,
+    page: result.page,
+    totalPages: result.totalPages,
+    hasMore: result.page < result.totalPages,
+  };
 }
 
 /**
@@ -110,8 +149,8 @@ export async function rescheduleSession(
  * Get upcoming sessions count
  */
 export async function getUpcomingSessionsCount(): Promise<number> {
-  const result = await apiClient.get<{ count: number }>('/sessions/me/upcoming-count');
-  return result.count;
+  const sessions = await apiClient.get<Session[]>('/sessions/upcoming');
+  return sessions.length;
 }
 
 // =====================
@@ -227,9 +266,54 @@ export async function getMyTeachingSessions(
   page: number = 1,
   limit: number = 10
 ): Promise<SessionsResult> {
+  // Map frontend status to backend status
+  if (status === 'upcoming') {
+    const sessions = await apiClient.get<Session[]>('/sessions/upcoming');
+    return {
+      sessions,
+      total: sessions.length,
+      page: 1,
+      totalPages: 1,
+      hasMore: false,
+    };
+  }
+  if (status === 'past') {
+    const sessions = await apiClient.get<Session[]>('/sessions/past', {
+      params: { limit },
+    });
+    return {
+      sessions,
+      total: sessions.length,
+      page: 1,
+      totalPages: 1,
+      hasMore: false,
+    };
+  }
+
+  // For pending and other statuses, use the main sessions endpoint
   const params: Record<string, string | number> = { page, limit };
-  if (status) {
+  if (status === 'pending') {
+    // Pending = SCHEDULED sessions that haven't started yet
+    params.status = 'SCHEDULED';
+  } else if (status === 'cancelled') {
+    // Will need to filter client-side or add backend support
+  } else if (status) {
     params.status = status;
   }
-  return apiClient.get<SessionsResult>('/sessions/teaching', { params });
+
+  const result = await apiClient.get<{
+    data: Session[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  }>('/sessions', { params });
+
+  return {
+    sessions: result.data,
+    total: result.total,
+    page: result.page,
+    totalPages: result.totalPages,
+    hasMore: result.page < result.totalPages,
+  };
 }

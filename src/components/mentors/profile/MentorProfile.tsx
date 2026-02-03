@@ -88,7 +88,7 @@ export function MentorProfile({ mentor }: MentorProfileProps) {
           <div>
             <p className="text-sm text-gray-500">À partir de</p>
             <p className="text-xl font-bold text-gray-900">
-              {mentor.hourly_rate}
+              {mentor.hourlyRate}
               {mentor.currency === 'EUR' ? '€' : mentor.currency}/h
             </p>
           </div>
