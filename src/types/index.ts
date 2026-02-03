@@ -2,11 +2,11 @@ export interface User {
   id: string;
   email: string;
   role: 'MENTOR' | 'MENTEE' | 'ADMIN' | 'PARENT';
-  first_name: string;
-  last_name: string;
-  avatar_url?: string;
-  country_code: string;
-  created_at: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  countryCode: string;
+  createdAt: string;
 }
 
 export interface MentorProfile {
@@ -139,17 +139,17 @@ export interface AvailabilitySlot {
 
 export interface Review {
   id: string;
-  mentor_id: string;
-  mentee_id: string;
+  mentorId: string;
+  menteeId: string;
   rating: number;
   comment: string;
-  created_at: string;
-  mentor_response?: string;
-  mentor_response_at?: string;
+  createdAt: string;
+  mentorResponse?: string;
+  mentorResponseAt?: string;
   mentee?: {
-    first_name: string;
-    last_name: string;
-    avatar_url?: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: string;
   };
 }
 

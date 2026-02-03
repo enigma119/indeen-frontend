@@ -30,7 +30,7 @@ export async function generateMetadata({
   }
 
   const fullName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
 
   return {
@@ -39,7 +39,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${fullName} - Mentor Coran`,
       description: mentor.headline,
-      images: mentor.user?.avatar_url ? [mentor.user.avatar_url] : [],
+      images: mentor.user?.avatarUrl ? [mentor.user.avatarUrl] : [],
       type: 'profile',
     },
     twitter: {
@@ -61,7 +61,7 @@ export default async function MentorProfilePage({
   }
 
   const fullName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
 
   // JSON-LD Schema for SEO
@@ -70,7 +70,7 @@ export default async function MentorProfilePage({
     '@type': 'Person',
     name: fullName,
     description: mentor.headline,
-    image: mentor.user?.avatar_url,
+    image: mentor.user?.avatarUrl,
     jobTitle: 'Mentor Coranique',
     aggregateRating: mentor.total_reviews > 0 ? {
       '@type': 'AggregateRating',

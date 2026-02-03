@@ -73,10 +73,10 @@ const formatResponseTime = (minutes?: number) => {
 // Render cell content based on criteria
 function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: CriteriaKey }) {
   const initials = mentor.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
   const fullName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
 
   switch (criteria) {
@@ -84,7 +84,7 @@ function CellContent({ mentor, criteria }: { mentor: MentorProfile; criteria: Cr
       return (
         <div className="flex flex-col items-center gap-2">
           <Avatar className="h-16 w-16 border-2 border-gray-100">
-            <AvatarImage src={mentor.user?.avatar_url} alt={fullName} />
+            <AvatarImage src={mentor.user?.avatarUrl} alt={fullName} />
             <AvatarFallback className="bg-teal-100 text-teal-700">
               {initials}
             </AvatarFallback>

@@ -121,7 +121,7 @@ export default function SessionsPage() {
   const filteredSessions = sessions.filter((s) => {
     if (!searchQuery) return true;
     const mentorName = s.mentor_profile?.user
-      ? `${s.mentor_profile.user.first_name} ${s.mentor_profile.user.last_name}`
+      ? `${s.mentor_profile.user.firstName} ${s.mentor_profile.user.lastName}`
       : '';
     return mentorName.toLowerCase().includes(searchQuery.toLowerCase());
   });

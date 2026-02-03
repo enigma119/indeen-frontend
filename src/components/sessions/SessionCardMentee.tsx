@@ -86,10 +86,10 @@ export function SessionCardMentee({ session, onCancelSuccess }: SessionCardMente
 
   const mentor = session.mentor_profile;
   const mentorName = mentor?.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
   const initials = mentor?.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
 
   const scheduledDate = new Date(session.scheduled_at);
@@ -107,7 +107,7 @@ export function SessionCardMentee({ session, onCancelSuccess }: SessionCardMente
             {/* Mentor Info */}
             <div className="flex items-start gap-3 flex-1">
               <Avatar className="h-12 w-12 md:h-14 md:w-14">
-                <AvatarImage src={mentor?.user?.avatar_url} alt={mentorName} />
+                <AvatarImage src={mentor?.user?.avatarUrl} alt={mentorName} />
                 <AvatarFallback className="bg-teal-100 text-teal-700">
                   {initials}
                 </AvatarFallback>

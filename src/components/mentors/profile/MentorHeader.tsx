@@ -63,11 +63,11 @@ export function MentorHeader({ mentor }: MentorHeaderProps) {
   };
 
   const initials = mentor.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
 
   const fullName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
 
   return (
@@ -78,7 +78,7 @@ export function MentorHeader({ mentor }: MentorHeaderProps) {
           <div className="relative">
             <Avatar className="h-28 w-28 md:h-32 md:w-32 border-4 border-white shadow-lg">
               <AvatarImage
-                src={mentor.user?.avatar_url}
+                src={mentor.user?.avatarUrl}
                 alt={fullName}
               />
               <AvatarFallback className="text-2xl md:text-3xl bg-teal-100 text-teal-700">
@@ -159,10 +159,10 @@ export function MentorHeader({ mentor }: MentorHeaderProps) {
             </div>
 
             {/* Location */}
-            {mentor.user?.country_code && (
+            {mentor.user?.countryCode && (
               <div className="flex items-center gap-1.5 text-gray-600">
                 <MapPin className="h-4 w-4" />
-                <span>{getCountryFlag(mentor.user.country_code)}</span>
+                <span>{getCountryFlag(mentor.user.countryCode)}</span>
               </div>
             )}
           </div>

@@ -105,7 +105,7 @@ export default function MentorSessionsPage() {
   const filteredSessions = sessions.filter((s) => {
     if (!searchQuery) return true;
     const menteeName = s.mentee_profile?.user
-      ? `${s.mentee_profile.user.first_name} ${s.mentee_profile.user.last_name}`
+      ? `${s.mentee_profile.user.firstName} ${s.mentee_profile.user.lastName}`
       : '';
     return menteeName.toLowerCase().includes(searchQuery.toLowerCase());
   });

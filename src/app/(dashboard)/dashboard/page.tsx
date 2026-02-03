@@ -28,7 +28,7 @@ export default function DashboardPage() {
     );
   }
 
-  const firstName = user?.first_name || 'Utilisateur';
+  const firstName = user?.firstName || 'Utilisateur';
 
   return (
     <div className="min-h-screen bg-gray-50">

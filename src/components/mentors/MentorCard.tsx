@@ -46,7 +46,7 @@ export function MentorCard({
   // Get initials from user
   const getInitials = () => {
     if (mentor.user) {
-      return `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`;
+      return `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`;
     }
     return '??';
   };
@@ -54,7 +54,7 @@ export function MentorCard({
   // Get full name
   const getFullName = () => {
     if (mentor.user) {
-      return `${mentor.user.first_name} ${mentor.user.last_name}`;
+      return `${mentor.user.firstName} ${mentor.user.lastName}`;
     }
     return 'Mentor';
   };
@@ -141,7 +141,7 @@ export function MentorCard({
         <div className="flex items-start gap-4 mb-4">
           <div className="relative">
             <Avatar className="h-16 w-16 border-2 border-white shadow-md">
-              <AvatarImage src={mentor.user?.avatar_url} alt={getFullName()} />
+              <AvatarImage src={mentor.user?.avatarUrl} alt={getFullName()} />
               <AvatarFallback className="bg-teal-100 text-teal-700 text-lg font-semibold">
                 {getInitials()}
               </AvatarFallback>
@@ -170,10 +170,10 @@ export function MentorCard({
             </div>
 
             {/* Location */}
-            {mentor.user?.country_code && (
+            {mentor.user?.countryCode && (
               <div className="flex items-center gap-1 mt-1 text-sm text-gray-500">
                 <MapPin className="h-3.5 w-3.5" />
-                <span>{getCountryFlag(mentor.user.country_code)}</span>
+                <span>{getCountryFlag(mentor.user.countryCode)}</span>
               </div>
             )}
           </div>

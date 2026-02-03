@@ -16,7 +16,7 @@ interface UserMenuProps {
   user: {
     name: string;
     email: string;
-    avatar_url?: string;
+    avatarUrl?: string;
   };
 }
 
@@ -33,7 +33,7 @@ export function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
           <Avatar className="h-9 w-9 cursor-pointer">
-            <AvatarImage src={user.avatar_url} alt={user.name} />
+            <AvatarImage src={user.avatarUrl} alt={user.name} />
             <AvatarFallback className="bg-teal-500 text-white text-sm font-medium">
               {initials}
             </AvatarFallback>

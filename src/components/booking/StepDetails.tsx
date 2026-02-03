@@ -80,10 +80,10 @@ export function StepDetails() {
 
   const price = calculatePrice(mentor.hourly_rate, duration);
   const mentorName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
   const initials = mentor.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
 
   const sessionDate = new Date(selectedSlot.date);
@@ -121,7 +121,7 @@ export function StepDetails() {
         <CardContent>
           <div className="flex items-start gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={mentor.user?.avatar_url} alt={mentorName} />
+              <AvatarImage src={mentor.user?.avatarUrl} alt={mentorName} />
               <AvatarFallback className="bg-teal-100 text-teal-700 text-lg">
                 {initials}
               </AvatarFallback>

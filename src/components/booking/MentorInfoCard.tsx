@@ -20,17 +20,17 @@ export function MentorInfoCard({
   showViewProfile = true,
 }: MentorInfoCardProps) {
   const mentorName = mentor.user
-    ? `${mentor.user.first_name} ${mentor.user.last_name}`
+    ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';
   const initials = mentor.user
-    ? `${mentor.user.first_name[0]}${mentor.user.last_name[0]}`
+    ? `${mentor.user.firstName[0]}${mentor.user.lastName[0]}`
     : 'M';
 
   if (compact) {
     return (
       <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={mentor.user?.avatar_url} alt={mentorName} />
+          <AvatarImage src={mentor.user?.avatarUrl} alt={mentorName} />
           <AvatarFallback className="bg-teal-100 text-teal-700 text-sm">
             {initials}
           </AvatarFallback>
@@ -54,7 +54,7 @@ export function MentorInfoCard({
       <CardContent className="p-4">
         <div className="flex items-start gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={mentor.user?.avatar_url} alt={mentorName} />
+            <AvatarImage src={mentor.user?.avatarUrl} alt={mentorName} />
             <AvatarFallback className="bg-teal-100 text-teal-700 text-lg">
               {initials}
             </AvatarFallback>

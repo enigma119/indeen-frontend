@@ -13,14 +13,14 @@ interface ReviewCardProps {
 
 export function ReviewCard({ review }: ReviewCardProps) {
   const initials = review.mentee
-    ? `${review.mentee.first_name[0]}${review.mentee.last_name[0]}`
+    ? `${review.mentee.firstName[0]}${review.mentee.lastName[0]}`
     : '?';
 
   const displayName = review.mentee
-    ? `${review.mentee.first_name} ${review.mentee.last_name[0]}.`
+    ? `${review.mentee.firstName} ${review.mentee.lastName[0]}.`
     : 'Anonyme';
 
-  const timeAgo = formatDistanceToNow(new Date(review.created_at), {
+  const timeAgo = formatDistanceToNow(new Date(review.createdAt), {
     addSuffix: true,
     locale: fr,
   });
@@ -30,7 +30,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage src={review.mentee?.avatar_url} alt={displayName} />
+          <AvatarImage src={review.mentee?.avatarUrl} alt={displayName} />
           <AvatarFallback className="bg-gray-100 text-gray-600 text-sm">
             {initials}
           </AvatarFallback>
@@ -63,7 +63,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
       <p className="text-gray-700 leading-relaxed">{review.comment}</p>
 
       {/* Mentor Response */}
-      {review.mentor_response && (
+      {review.mentorResponse && (
         <div className="mt-4 bg-gray-50 rounded-lg p-4 ml-4 border-l-2 border-teal-500">
           <div className="flex items-center gap-2 mb-2">
             <MessageCircle className="h-4 w-4 text-teal-600" />
@@ -71,7 +71,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
               Réponse du mentor
             </span>
           </div>
-          <p className="text-gray-600 text-sm">{review.mentor_response}</p>
+          <p className="text-gray-600 text-sm">{review.mentorResponse}</p>
         </div>
       )}
     </div>

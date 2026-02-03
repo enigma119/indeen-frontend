@@ -77,10 +77,10 @@ export function SessionCardMentor({ session, onActionSuccess }: SessionCardMento
 
   const mentee = session.mentee_profile;
   const menteeName = mentee?.user
-    ? `${mentee.user.first_name} ${mentee.user.last_name}`
+    ? `${mentee.user.firstName} ${mentee.user.lastName}`
     : 'Élève';
   const initials = mentee?.user
-    ? `${mentee.user.first_name[0]}${mentee.user.last_name[0]}`
+    ? `${mentee.user.firstName[0]}${mentee.user.lastName[0]}`
     : 'E';
 
   const scheduledDate = new Date(session.scheduled_at);
@@ -110,7 +110,7 @@ export function SessionCardMentor({ session, onActionSuccess }: SessionCardMento
             {/* Mentee Info */}
             <div className="flex items-start gap-3 flex-1">
               <Avatar className="h-12 w-12 md:h-14 md:w-14">
-                <AvatarImage src={mentee?.user?.avatar_url} alt={menteeName} />
+                <AvatarImage src={mentee?.user?.avatarUrl} alt={menteeName} />
                 <AvatarFallback className="bg-blue-100 text-blue-700">
                   {initials}
                 </AvatarFallback>

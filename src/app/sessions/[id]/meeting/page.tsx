@@ -126,7 +126,7 @@ function MeetingPageContent() {
       const token = tokenData?.token;
 
       // Join the call
-      const userName = `${user.first_name} ${user.last_name}`;
+      const userName = `${user.firstName} ${user.lastName}`;
       await join({
         roomUrl: meetingUrl,
         token,
@@ -181,11 +181,11 @@ function MeetingPageContent() {
     if (!session) return 'l\'autre participant';
     if (isMentor) {
       return session.mentee_profile?.user
-        ? `${session.mentee_profile.user.first_name} ${session.mentee_profile.user.last_name}`
+        ? `${session.mentee_profile.user.firstName} ${session.mentee_profile.user.lastName}`
         : 'l\'élève';
     }
     return session.mentor_profile?.user
-      ? `${session.mentor_profile.user.first_name} ${session.mentor_profile.user.last_name}`
+      ? `${session.mentor_profile.user.firstName} ${session.mentor_profile.user.lastName}`
       : 'le mentor';
   };
 
@@ -245,7 +245,7 @@ function MeetingPageContent() {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
         <PreCallCheck
-          userName={user ? `${user.first_name} ${user.last_name}` : 'Participant'}
+          userName={user ? `${user.firstName} ${user.lastName}` : 'Participant'}
           onJoin={handleJoin}
           onCancel={() => router.push(`/sessions/${sessionId}`)}
         />
