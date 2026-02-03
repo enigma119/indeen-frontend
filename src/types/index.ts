@@ -64,13 +64,56 @@ export interface MentorProfile {
   createdAt?: string;
 }
 
+export type CertificationType =
+  | 'ijaza'
+  | 'university_degree'
+  | 'professional_training'
+  | 'online_certification'
+  | 'other';
+
+export type CertificationStatus =
+  | 'PENDING'
+  | 'VERIFIED'
+  | 'REJECTED'
+  | 'EXPIRED';
+
 export interface Certification {
   id: string;
-  type: string;
+  mentorProfileId: string;
+  type: CertificationType;
   name: string;
   institution?: string;
   year?: number;
+  expirationDate?: string;
+  description?: string;
   documentUrl?: string;
+  isPublic: boolean;
+  status: CertificationStatus;
+  rejectionReason?: string;
+  verifiedAt?: string;
+  verifiedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCertificationDto {
+  type: CertificationType;
+  name: string;
+  institution?: string;
+  year?: number;
+  expirationDate?: string;
+  description?: string;
+  isPublic?: boolean;
+}
+
+export interface UpdateCertificationDto {
+  type?: CertificationType;
+  name?: string;
+  institution?: string;
+  year?: number;
+  expirationDate?: string;
+  description?: string;
+  isPublic?: boolean;
 }
 
 export interface MenteeProfile {
