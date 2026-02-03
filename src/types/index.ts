@@ -393,3 +393,88 @@ export interface MeetingMessage {
   timestamp: Date;
   is_local: boolean;
 }
+
+// ============================================
+// SETTINGS TYPES
+// ============================================
+
+export interface NotificationPreferences {
+  emailNotifications: boolean;
+  emailSessions: boolean;
+  emailPayments: boolean;
+  emailReviews: boolean;
+  emailMarketing: boolean;
+  emailNewsletter: boolean;
+  inAppNotifications: boolean;
+  inAppMessages: boolean;
+  inAppSessions: boolean;
+  inAppBookingRequests: boolean;
+  pushNotifications: boolean;
+  notificationFrequency: 'immediate' | 'daily' | 'weekly';
+}
+
+export interface PrivacySettings {
+  // Mentee settings
+  profileVisibleToMentors: boolean;
+  shareFirstName: boolean;
+  shareCountry: boolean;
+  shareLearningGoals: boolean;
+  // Mentor settings
+  appearInSearch: boolean;
+  acceptingNewStudents: boolean;
+  // Common settings
+  analyticalCookies: boolean;
+  marketingCookies: boolean;
+}
+
+export interface ActiveSession {
+  id: string;
+  device: string;
+  browser: string;
+  os: string;
+  ipAddress: string;
+  location: string;
+  lastActivity: string;
+  isCurrent: boolean;
+}
+
+export interface LoginHistory {
+  id: string;
+  timestamp: string;
+  ipAddress: string;
+  device: string;
+  browser: string;
+  os: string;
+  location: string;
+  success: boolean;
+}
+
+export interface TwoFactorSetupData {
+  secret: string;
+  qrCodeUrl: string;
+  backupCodes: string[];
+}
+
+export interface DataExportRequest {
+  id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  requestedAt: string;
+  completedAt?: string;
+  downloadUrl?: string;
+  expiresAt?: string;
+  format: 'json' | 'csv';
+}
+
+export interface DeleteAccountCheck {
+  canDelete: boolean;
+  pendingSessions: number;
+  pendingPayments: number;
+  blockers: string[];
+}
+
+export type DeleteAccountReason =
+  | 'no_longer_needed'
+  | 'too_expensive'
+  | 'technical_issues'
+  | 'bad_experience'
+  | 'other';
