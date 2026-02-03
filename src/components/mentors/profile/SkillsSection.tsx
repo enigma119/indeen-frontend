@@ -24,16 +24,16 @@ export function SkillsSection({ mentor }: SkillsSectionProps) {
 
   // Student types
   const studentTypes = [
-    { key: 'teaches_children', label: 'Enfants', icon: '👶', active: mentor.teaches_children },
-    { key: 'teaches_teenagers', label: 'Adolescents', icon: '🧑‍🎓', active: mentor.teaches_teenagers },
-    { key: 'teaches_adults', label: 'Adultes', icon: '👨', active: mentor.teaches_adults },
+    { key: 'teaches_children', label: 'Enfants', icon: '👶', active: mentor.teachesChildren },
+    { key: 'teaches_teenagers', label: 'Adolescents', icon: '🧑‍🎓', active: mentor.teachesTeenagers },
+    { key: 'teaches_adults', label: 'Adultes', icon: '👨', active: mentor.teachesAdults },
   ];
 
   // Teaching capabilities
   const capabilities = [
-    { key: 'beginner_friendly', label: 'À l\'aise avec les débutants', active: mentor.beginner_friendly },
-    { key: 'patient_with_slow_learners', label: 'Patient avec les apprenants lents', active: mentor.patient_with_slow_learners },
-    { key: 'experienced_with_new_muslims', label: 'Expérience avec les nouveaux musulmans', active: mentor.experienced_with_new_muslims },
+    { key: 'beginner_friendly', label: 'À l\'aise avec les débutants', active: mentor.beginnerFriendly },
+    { key: 'patient_with_slow_learners', label: 'Patient avec les apprenants lents', active: mentor.patientWithSlowLearners },
+    { key: 'experienced_with_new_muslims', label: 'Expérience avec les nouveaux musulmans', active: mentor.experiencedWithNewMuslims },
   ];
 
   const activeCapabilities = capabilities.filter((c) => c.active);
@@ -53,7 +53,7 @@ export function SkillsSection({ mentor }: SkillsSectionProps) {
         <div className="flex flex-wrap gap-2">
           {mentor.languages.map((lang) => {
             const langInfo = getLanguageInfo(lang);
-            const isNative = mentor.native_language === lang;
+            const isNative = mentor.nativeLanguage === lang;
             return (
               <Badge
                 key={lang}
@@ -144,14 +144,14 @@ export function SkillsSection({ mentor }: SkillsSectionProps) {
       )}
 
       {/* Accepted Levels */}
-      {mentor.accepted_levels && mentor.accepted_levels.length > 0 && (
+      {mentor.acceptedLevels && mentor.acceptedLevels.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
             <GraduationCap className="h-5 w-5 text-gray-500" />
             <h3 className="font-medium text-gray-900">Niveaux acceptés</h3>
           </div>
           <div className="flex flex-wrap gap-2">
-            {mentor.accepted_levels.map((level) => (
+            {mentor.acceptedLevels.map((level) => (
               <Badge
                 key={level}
                 variant="outline"

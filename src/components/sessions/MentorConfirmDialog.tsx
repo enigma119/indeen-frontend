@@ -111,9 +111,9 @@ export function MentorConfirmDialog({
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h4 className="font-semibold">{menteeName}</h4>
-                {mentee?.current_level && (
+                {mentee?.currentLevel && (
                   <Badge variant="outline" className="text-xs">
-                    {mentee.current_level}
+                    {mentee.currentLevel}
                   </Badge>
                 )}
               </div>
@@ -147,14 +147,14 @@ export function MentorConfirmDialog({
           )}
 
           {/* Mentee Goals */}
-          {mentee?.learning_goals && mentee.learning_goals.length > 0 && (
+          {mentee?.learningGoals && mentee.learningGoals.length > 0 && (
             <div className="p-3 border rounded-lg">
               <p className="text-sm font-medium flex items-center gap-1.5 text-gray-700">
                 <User className="h-4 w-4" />
                 Objectifs de l'élève :
               </p>
               <div className="flex flex-wrap gap-1 mt-1">
-                {mentee.learning_goals.map((goal, index) => (
+                {mentee.learningGoals.map((goal, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
                     {goal}
                   </Badge>

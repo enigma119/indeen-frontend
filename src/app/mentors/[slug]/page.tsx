@@ -72,10 +72,10 @@ export default async function MentorProfilePage({
     description: mentor.headline,
     image: mentor.user?.avatarUrl,
     jobTitle: 'Mentor Coranique',
-    aggregateRating: mentor.total_reviews > 0 ? {
+    aggregateRating: mentor.totalReviews > 0 ? {
       '@type': 'AggregateRating',
-      ratingValue: mentor.average_rating,
-      reviewCount: mentor.total_reviews,
+      ratingValue: mentor.averageRating,
+      reviewCount: mentor.totalReviews,
       bestRating: 5,
       worstRating: 1,
     } : undefined,

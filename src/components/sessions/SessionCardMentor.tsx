@@ -119,10 +119,10 @@ export function SessionCardMentor({ session, onActionSuccess }: SessionCardMento
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-semibold text-gray-900">{menteeName}</h3>
-                  {mentee?.current_level && (
+                  {mentee?.currentLevel && (
                     <Badge variant="outline" className="gap-1">
                       <GraduationCap className="h-3 w-3" />
-                      {mentee.current_level}
+                      {mentee.currentLevel}
                     </Badge>
                   )}
                 </div>
@@ -219,7 +219,7 @@ export function SessionCardMentor({ session, onActionSuccess }: SessionCardMento
           </div>
 
           {/* Lesson Plan & Mentee Goals */}
-          {(session.lesson_plan || mentee?.learning_goals) && (needsConfirmation(session) || isUpcoming(session)) && (
+          {(session.lesson_plan || mentee?.learningGoals) && (needsConfirmation(session) || isUpcoming(session)) && (
             <div className="mt-4 pt-4 border-t space-y-2">
               {session.lesson_plan && (
                 <div>
@@ -230,14 +230,14 @@ export function SessionCardMentor({ session, onActionSuccess }: SessionCardMento
                   <p className="text-sm text-gray-700 line-clamp-2 mt-1">{session.lesson_plan}</p>
                 </div>
               )}
-              {mentee?.learning_goals && mentee.learning_goals.length > 0 && (
+              {mentee?.learningGoals && mentee.learningGoals.length > 0 && (
                 <div>
                   <p className="text-sm text-gray-500 flex items-center gap-1">
                     <User className="h-3.5 w-3.5" />
                     Objectifs de l'élève :
                   </p>
                   <p className="text-sm text-gray-700 mt-1">
-                    {mentee.learning_goals.join(', ')}
+                    {mentee.learningGoals.join(', ')}
                   </p>
                 </div>
               )}

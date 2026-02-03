@@ -56,7 +56,7 @@ export function StepConfirmation({
 
   // Check if free trial applies (mentor offers it)
   // In production, also check if this is the user's first session with this mentor
-  const isFreeTrial = externalIsFreeTrial ?? mentor.free_trial_available;
+  const isFreeTrial = externalIsFreeTrial ?? mentor.freeTrialAvailable;
 
   const mentorName = mentor.user
     ? `${mentor.user.firstName} ${mentor.user.lastName}`
@@ -131,14 +131,14 @@ export function StepConfirmation({
             <div>
               <h3 className="font-semibold text-gray-900">{mentorName}</h3>
               <p className="text-sm text-gray-500">{mentor.headline}</p>
-              {mentor.average_rating > 0 && (
+              {mentor.averageRating > 0 && (
                 <div className="flex items-center gap-1 mt-1">
                   <span className="text-yellow-500">★</span>
                   <span className="text-sm font-medium">
-                    {mentor.average_rating.toFixed(1)}
+                    {mentor.averageRating.toFixed(1)}
                   </span>
                   <span className="text-sm text-gray-400">
-                    ({mentor.total_reviews} avis)
+                    ({mentor.totalReviews} avis)
                   </span>
                 </div>
               )}
@@ -208,7 +208,7 @@ export function StepConfirmation({
 
       {/* Pricing Summary */}
       <PricingSummary
-        hourlyRate={mentor.hourly_rate}
+        hourlyRate={mentor.hourlyRate}
         currency={mentor.currency}
         duration={duration}
         isFreeTrialApplied={isFreeTrial}

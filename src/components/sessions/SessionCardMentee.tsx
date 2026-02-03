@@ -116,10 +116,10 @@ export function SessionCardMentee({ session, onCancelSuccess }: SessionCardMente
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="font-semibold text-gray-900">{mentorName}</h3>
-                  {mentor && mentor.average_rating > 0 && (
+                  {mentor && mentor.averageRating > 0 && (
                     <div className="flex items-center gap-1 text-sm">
                       <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
-                      <span>{mentor.average_rating.toFixed(1)}</span>
+                      <span>{mentor.averageRating.toFixed(1)}</span>
                     </div>
                   )}
                 </div>

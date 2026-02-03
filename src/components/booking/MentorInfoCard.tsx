@@ -37,11 +37,11 @@ export function MentorInfoCard({
         </Avatar>
         <div className="flex-1 min-w-0">
           <p className="font-medium text-gray-900 truncate">{mentorName}</p>
-          {mentor.average_rating > 0 && (
+          {mentor.averageRating > 0 && (
             <div className="flex items-center gap-1 text-sm">
               <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
-              <span className="font-medium">{mentor.average_rating.toFixed(1)}</span>
-              <span className="text-gray-400">({mentor.total_reviews})</span>
+              <span className="font-medium">{mentor.averageRating.toFixed(1)}</span>
+              <span className="text-gray-400">({mentor.totalReviews})</span>
             </div>
           )}
         </div>
@@ -71,19 +71,19 @@ export function MentorInfoCard({
             </div>
 
             {/* Rating */}
-            {mentor.average_rating > 0 && (
+            {mentor.averageRating > 0 && (
               <div className="flex items-center gap-1 mt-2">
                 <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                <span className="font-medium">{mentor.average_rating.toFixed(1)}</span>
+                <span className="font-medium">{mentor.averageRating.toFixed(1)}</span>
                 <span className="text-sm text-gray-400">
-                  ({mentor.total_reviews} avis)
+                  ({mentor.totalReviews} avis)
                 </span>
               </div>
             )}
 
             {/* Badges */}
             <div className="flex flex-wrap gap-1.5 mt-3">
-              {mentor.verification_status === 'APPROVED' && (
+              {mentor.verificationStatus === 'APPROVED' && (
                 <Badge
                   variant="secondary"
                   className="bg-green-100 text-green-700 gap-1"
@@ -92,7 +92,7 @@ export function MentorInfoCard({
                   Vérifié
                 </Badge>
               )}
-              {mentor.free_trial_available && (
+              {mentor.freeTrialAvailable && (
                 <Badge
                   variant="secondary"
                   className="bg-purple-100 text-purple-700"
@@ -100,22 +100,22 @@ export function MentorInfoCard({
                   Essai gratuit
                 </Badge>
               )}
-              {mentor.total_sessions && mentor.total_sessions > 50 && (
+              {mentor.totalSessions && mentor.totalSessions > 50 && (
                 <Badge
                   variant="secondary"
                   className="bg-blue-100 text-blue-700 gap-1"
                 >
                   <Clock className="h-3 w-3" />
-                  {mentor.total_sessions}+ sessions
+                  {mentor.totalSessions}+ sessions
                 </Badge>
               )}
-              {mentor.total_students && mentor.total_students > 10 && (
+              {mentor.totalStudents && mentor.totalStudents > 10 && (
                 <Badge
                   variant="secondary"
                   className="bg-amber-100 text-amber-700 gap-1"
                 >
                   <Users className="h-3 w-3" />
-                  {mentor.total_students}+ élèves
+                  {mentor.totalStudents}+ élèves
                 </Badge>
               )}
             </div>

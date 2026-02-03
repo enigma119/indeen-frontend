@@ -157,7 +157,7 @@ export default function SessionDetailPage() {
   const scheduledDate = new Date(session.scheduled_at);
 
   // Determine if user is mentor or mentee for this session
-  const isSessionMentor = user?.id === session.mentor_profile?.user_id;
+  const isSessionMentor = user?.id === session.mentor_profile?.userId;
   const isSessionMentee = !isSessionMentor;
 
   // Get the other participant's info
@@ -171,8 +171,8 @@ export default function SessionDetailPage() {
           ? `${session.mentee_profile.user.firstName[0]}${session.mentee_profile.user.lastName[0]}`
           : 'E',
         role: 'Élève',
-        level: session.mentee_profile?.current_level,
-        goals: session.mentee_profile?.learning_goals,
+        level: session.mentee_profile?.currentLevel,
+        goals: session.mentee_profile?.learningGoals,
       }
     : {
         name: session.mentor_profile?.user
@@ -183,7 +183,7 @@ export default function SessionDetailPage() {
           ? `${session.mentor_profile.user.firstName[0]}${session.mentor_profile.user.lastName[0]}`
           : 'M',
         role: 'Mentor',
-        rating: session.mentor_profile?.average_rating,
+        rating: session.mentor_profile?.averageRating,
         headline: session.mentor_profile?.headline,
         slug: session.mentor_profile?.slug,
       };

@@ -45,7 +45,7 @@ export function BookingCard({ mentor }: BookingCardProps) {
     router.push(`/sessions/new?mentorId=${mentor.id}`);
   };
 
-  const responseTime = formatResponseTime(mentor.average_response_time);
+  const responseTime = formatResponseTime(mentor.averageResponseTime);
 
   const guarantees = [
     { icon: CreditCard, label: 'Paiement sécurisé' },
@@ -61,14 +61,14 @@ export function BookingCard({ mentor }: BookingCardProps) {
           <p className="text-sm text-gray-500 mb-1">À partir de</p>
           <div className="flex items-baseline gap-1">
             <span className="text-3xl font-bold text-gray-900">
-              {formatCurrency(mentor.hourly_rate, mentor.currency)}
+              {formatCurrency(mentor.hourlyRate, mentor.currency)}
             </span>
             <span className="text-gray-500">/heure</span>
           </div>
         </div>
 
         {/* Free Trial Badge */}
-        {mentor.free_trial_available && (
+        {mentor.freeTrialAvailable && (
           <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100 w-full justify-center py-2">
             <Gift className="h-4 w-4 mr-2" />
             Essai gratuit 30 min

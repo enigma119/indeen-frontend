@@ -78,7 +78,7 @@ export function StepDetails() {
     );
   }
 
-  const price = calculatePrice(mentor.hourly_rate, duration);
+  const price = calculatePrice(mentor.hourlyRate, duration);
   const mentorName = mentor.user
     ? `${mentor.user.firstName} ${mentor.user.lastName}`
     : 'Mentor';

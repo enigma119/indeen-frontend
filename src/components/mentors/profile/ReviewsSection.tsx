@@ -87,7 +87,7 @@ export function ReviewsSection({ mentor }: ReviewsSectionProps) {
         <div className="text-center md:text-left">
           <div className="flex items-baseline justify-center md:justify-start gap-1">
             <span className="text-5xl font-bold text-gray-900">
-              {mentor.average_rating.toFixed(1)}
+              {mentor.averageRating.toFixed(1)}
             </span>
             <span className="text-2xl text-gray-400">/5</span>
           </div>
@@ -97,7 +97,7 @@ export function ReviewsSection({ mentor }: ReviewsSectionProps) {
                 key={star}
                 className={cn(
                   'h-5 w-5',
-                  star <= Math.round(mentor.average_rating)
+                  star <= Math.round(mentor.averageRating)
                     ? 'fill-yellow-400 text-yellow-400'
                     : 'fill-gray-200 text-gray-200'
                 )}
@@ -105,7 +105,7 @@ export function ReviewsSection({ mentor }: ReviewsSectionProps) {
             ))}
           </div>
           <p className="text-sm text-gray-500 mt-1">
-            {mentor.total_reviews} avis
+            {mentor.totalReviews} avis
           </p>
         </div>
 
