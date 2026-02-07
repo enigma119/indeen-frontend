@@ -78,7 +78,7 @@ export function Header() {
                 </Button>
                 <Button
                   asChild
-                  className="bg-navy-800 hover:bg-navy-900 text-white rounded-full px-6"
+                  className="bg-navy-800 hover:bg-navy-900 border text-black rounded-full px-6"
                 >
                   <Link href="/signup">S&apos;inscrire</Link>
                 </Button>
